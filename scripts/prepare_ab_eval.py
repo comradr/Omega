@@ -42,6 +42,12 @@ def main() -> int:
     b = index_cases(baseline)
     c = index_cases(candidate)
 
+    if baseline.get("benchmark_version") != candidate.get("benchmark_version"):
+        raise SystemExit(
+            f"Benchmark versions differ: baseline={baseline.get('benchmark_version')!r}, "
+            f"candidate={candidate.get('benchmark_version')!r}"
+        )
+
     if set(b) != set(c):
         missing_b = sorted(set(c) - set(b))
         missing_c = sorted(set(b) - set(c))
@@ -66,7 +72,6 @@ def main() -> int:
     args.out_dir.mkdir(parents=True, exist_ok=True)
     blind = {
         "benchmark_version": baseline.get("benchmark_version"),
-        "seed": args.seed,
         "cases": blind_cases,
     }
     key = {"seed": args.seed, "cases": key_cases}
