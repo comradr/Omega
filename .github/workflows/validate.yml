@@ -26,3 +26,4 @@ jobs:
         run: python -m compileall -q scripts
       - name: Package and revalidate archives
         run: python scripts/package_skill.py .
+      - name: Upload installable skill bundles\n        uses: actions/upload-artifact@v4\n        with:\n          name: prompt-architect-omega-${{ github.sha }}\n          path: |\n            ../prompt-architect-omega.zip\n            ../prompt-architect-omega.skill\n          if-no-files-found: error\n
