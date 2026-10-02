@@ -41,4 +41,21 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Main remains the 0.9.0 baseline while `omega-1.0` contains `1.0.0-rc2`. The candidate adds adaptive complexity routing, lower core overhead, architecture-state caching, runtime adaptation, trust boundaries, behavior mining, empirical-evaluation protocols, and automated CI. GitHub is the source of truth; package with `python scripts/package_skill.py .` to produce the installable skill bundle.
+`main` currently contains `1.0.0-rc2`. It adds adaptive complexity routing, lower core overhead, architecture-state caching, runtime adaptation, trust boundaries, behavior mining, empirical-evaluation protocols, regression corpora, and automated CI.
+
+
+## Install / use
+
+GitHub is the source of truth, not an assumed direct-install endpoint.
+
+1. Clone or download this repository.
+2. Run:
+
+```bash
+python scripts/package_skill.py .
+```
+
+3. Use the generated `prompt-architect-omega.zip` or `prompt-architect-omega.skill` in a ChatGPT/Work surface that supports Skill upload/install.
+4. In a separate prompt-engineering chat, describe the goal normally. Omega should decide the internal complexity path, relevant capabilities, whether skills/subagents/task-skill are justified, and return the smallest useful execution package.
+
+Do not paste the whole repository into every task chat. The installed skill should load detailed references only when needed.
