@@ -63,4 +63,4 @@ Do not paste the whole repository into every task chat. The installed skill shou
 
 ## Use in ChatGPT Work without native Skills
 
-If your ChatGPT surface does not expose native Skill upload/install, use the compatibility bootstrap in [docs/WORK-BOOTSTRAP.md](docs/WORK-BOOTSTRAP.md). It tells Work to read `SKILL.md` from this repository first and load only the references needed for the current task, preserving Omega's progressive-disclosure/token-overhead design.
+If your ChatGPT surface does not expose native Skill upload/install, use the compact [Plus + Work quickstart](docs/PLUS-WORK-QUICKSTART.md). The expanded compatibility notes remain in [docs/WORK-BOOTSTRAP.md](docs/WORK-BOOTSTRAP.md). Both paths tell Work to read `SKILL.md` first and load references only when needed, preserving Omega's progressive-disclosure/token-overhead design.
