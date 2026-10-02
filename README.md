@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current stable release on `main`: `1.0.1`. Branch `omega-1.0.2` hardens generic validator semantics and CI without changing Omega runtime behavior. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
+Current stable release: `1.0.2`. It keeps Omega's compact 1.0 runtime behavior unchanged while making the generic task-skill validator standards-aligned and enforcing its regression suite in CI. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
 
 
 ## Install / use
