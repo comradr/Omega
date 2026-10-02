@@ -80,3 +80,14 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Observed behavior:** a skill can be uploaded as a ZIP containing a single top-level folder with one `SKILL.md`; current limits are 50 MB compressed, 500 files, and 25 MB per uncompressed file.
 - **Architectural implication:** `prompt-architect-omega.zip` is the canonical OpenAI-targeted bundle. A `.skill` compatibility copy must not be described as universally supported by ChatGPT unless the target surface documents that extension.
 - **Source:** OpenAI API “Skills”.
+
+
+### Agent Skills optional frontmatter
+
+- **Evidence class:** Agent Skills specification referenced by OpenAI's skill documentation.
+- **Last verified:** 2026-10-02.
+- **Required frontmatter:** `name` and `description`.
+- **Optional frontmatter:** `license`, `compatibility`, `metadata`, and experimental `allowed-tools`.
+- **Constraints used by Omega preflight:** `compatibility` is at most 500 characters; `metadata` is a string-to-string mapping.
+- **Architectural implication:** Omega's generic task-skill validator accepts the documented optional fields rather than imposing the narrower early-project schema.
+- **Source:** Agent Skills specification and OpenAI Developers skill validation guidance.
