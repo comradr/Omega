@@ -1,10 +1,10 @@
-# Omega 1.0 Release-Candidate Validation
+# Omega 1.0 Validation
 
 Date: 2026-10-02
 
 ## Purpose
 
-This report records what has actually been verified for the Omega 1.0 release candidate and what remains unverified.
+This report records what has actually been verified for Omega 1.0 and what remains intentionally unclaimed.
 
 ## Baseline versus candidate core
 
@@ -65,10 +65,14 @@ A true differential benchmark requires running the same held-out tasks through b
 
 ## Release rule
 
-Do not label the candidate final merely because files validate. Final promotion should require:
+Stable 1.0 promotion requires:
 
 1. green local checks;
 2. green GitHub CI on the release commit;
 3. no unresolved material red-team defect;
 4. package contents inspected and installable;
 5. model-execution A/B evidence when a repeatable runner is available, or an explicit release note that this evidence is still pending.
+
+## Stable 1.0 promotion record
+
+Version `1.0.0` is promoted after the RC3 branch passed the repository validation workflow and the final red-team pass found no unresolved material architecture defect. The release still does not claim a measured model-execution quality win over 0.9; that claim requires the independent differential benchmark described above.
