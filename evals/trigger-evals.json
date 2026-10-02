@@ -96,6 +96,18 @@
       "split": "holdout",
       "expect": "no-trigger",
       "query": "Выполни уже готовое ТЗ из файла; новый промпт или workflow мне не нужен."
+    },
+    {
+      "id": "n9",
+      "split": "dev",
+      "expect": "no-trigger",
+      "query": "Какой инструмент лучше использовать для обычного редактирования фотографий?"
+    },
+    {
+      "id": "n10",
+      "split": "holdout",
+      "expect": "no-trigger",
+      "query": "Which plugin should I connect to read my email? I am not asking for a prompt or workflow."
     }
   ]
 }
