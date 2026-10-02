@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-`main` currently contains `1.0.0-rc2`. It adds adaptive complexity routing, lower core overhead, architecture-state caching, runtime adaptation, trust boundaries, behavior mining, empirical-evaluation protocols, regression corpora, and automated CI.
+`main` currently contains `1.0.0-rc2`; branch `omega-1.0-final` contains `1.0.0-rc3`. RC3 specifically reduces always-on discovery metadata and strengthens held-out trigger regression checks before final 1.0 promotion.
 
 
 ## Install / use
