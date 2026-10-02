@@ -2,7 +2,11 @@
 
 Use this when native ChatGPT Skill installation is unavailable but the Work run can read this GitHub repository.
 
-## Start prompt
+## Minimal low-overhead version
+
+For routine use, prefer the shorter bootstrap in [PLUS-WORK-QUICKSTART.md](PLUS-WORK-QUICKSTART.md). It preserves the same routing rules with less prompt overhead.
+
+## Expanded start prompt
 
 Use `https://github.com/comradr/Omega` as the source of truth for Prompt Architect Omega.
 
