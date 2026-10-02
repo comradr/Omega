@@ -18,7 +18,7 @@ def main():
     if a.with_scripts: (root/"scripts").mkdir()
     display=a.display_name or a.name.replace("-"," ").title()
     (root/"SKILL.md").write_text(f"---\nname: {a.name}\ndescription: {json.dumps(a.description,ensure_ascii=False)}\n---\n\n# {display}\n\n## Objective\n\nDefine the durable task-specific workflow and invariants here.\n\n## Workflow\n\n1. Inspect the source of truth.\n2. Execute the task-specific procedure.\n3. Verify observable completion criteria.\n",encoding="utf-8")
-    default=f"Use ${a.name} to execute this task according to its project-specific workflow."
+    default="Use this task-specific workflow to execute the request according to its project rules and verification requirements."
     (root/"agents"/"openai.yaml").write_text("interface:\n"+f"  display_name: {json.dumps(display)}\n  short_description: \"Task-specific execution workflow\"\n  default_prompt: {json.dumps(default)}\npolicy:\n  allow_implicit_invocation: true\n",encoding="utf-8")
     print(root)
 if __name__=="__main__": main()
