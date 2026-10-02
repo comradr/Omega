@@ -123,6 +123,18 @@ Earlier validation accepted only `name` and `description`. The Agent Skills spec
 
 1.0.3 expands the dependency-free preflight parser and adds regression tests for valid optional fields, metadata type errors, overlong compatibility text, and unknown frontmatter.
 
+### 6. Plus distribution path
+
+Current OpenAI Plugins can be skills-only, and the Plugin Directory is available across ChatGPT plans subject to account/surface capability. 1.0.3 therefore adds a generated `prompt-architect-omega-plugin.zip` wrapper without duplicating the canonical skill source.
+
+The release now supports:
+
+- native/direct OpenAI Skill ZIP;
+- generated skills-only Plugin ZIP;
+- low-overhead Work bootstrap fallback.
+
+The wrapper is packaging/distribution only and does not alter Omega runtime instructions.
+
 ## Token/context overhead
 
 The always-on skill discovery description remains deliberately small. The root `SKILL.md` is a router; detailed behavior lives in references loaded only when needed.
