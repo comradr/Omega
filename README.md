@@ -44,16 +44,22 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 Current stable release on `main`: `1.0.2`. Branch `omega-1.0.3-final-audit` is the final-audit candidate. It keeps the compact runtime architecture, removes an unsupported default-prompt convention, and adds an executable blind A/B / trigger-evaluation harness. Model-execution superiority is not claimed until actual comparable runs are supplied.
 
 
+## Installation paths
+
+Omega has one canonical source and three distribution paths:
+
+- **OpenAI Skill ZIP:** `prompt-architect-omega.zip`.
+- **Skills-only Plugin ZIP:** `prompt-architect-omega-plugin.zip`, generated from the same source for Plugin-capable surfaces.
+- **Work bootstrap:** compatibility fallback when the account/surface exposes neither install path.
+
+See [docs/PLUGIN-WRAPPER.md](docs/PLUGIN-WRAPPER.md) and [docs/PLUS-WORK-QUICKSTART.md](docs/PLUS-WORK-QUICKSTART.md).
+
 ## Install / use
 
 GitHub is the source of truth, not an assumed direct-install endpoint.
 
 1. Clone or download this repository.
-2. Run:
-
-```bash
-python scripts/package_skill.py .
-```
+2. Build the canonical Skill bundle with `python scripts/package_skill.py .`. To also build the skills-only Plugin wrapper, run `python scripts/package_plugin.py .`.
 
 3. For OpenAI Skill upload/API use the generated `prompt-architect-omega.zip`, which contains one top-level skill folder as documented by OpenAI. The generated `.skill` file is an identical ZIP-format compatibility artifact; use that extension only on runtimes that explicitly accept it.
 4. In a separate prompt-engineering chat, describe the goal normally. Omega should decide the internal complexity path, relevant capabilities, whether skills/subagents/task-skill are justified, and return the smallest useful execution package.
