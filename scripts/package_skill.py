@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -73,17 +74,22 @@ def main() -> int:
     name = skill_name(root)
     files = package_files(root)
 
-    outputs: list[Path] = []
-    for ext in ("zip", "skill"):
-        out = root.parent / f"{name}.{ext}"
+    zip_out = root.parent / f"{name}.zip"
+    skill_out = root.parent / f"{name}.skill"
+    for out in (zip_out, skill_out):
         if out.exists():
             out.unlink()
-        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zf:
-            for rel in files:
-                zf.write(root / rel, Path(name) / rel)
-        if out.stat().st_size > MAX_ZIP_BYTES:
-            raise SystemExit(f"{out.name} exceeds the 50 MB upload limit")
-        outputs.append(out)
+
+    with zipfile.ZipFile(zip_out, "w", zipfile.ZIP_DEFLATED) as zf:
+        for rel in files:
+            zf.write(root / rel, Path(name) / rel)
+    if zip_out.stat().st_size > MAX_ZIP_BYTES:
+        raise SystemExit(f"{zip_out.name} exceeds the 50 MB upload limit")
+
+    # OpenAI's documented skill-upload artifact is the ZIP. Keep .skill only as
+    # a byte-identical compatibility alias for runtimes that explicitly accept it.
+    shutil.copyfile(zip_out, skill_out)
+    outputs = [zip_out, skill_out]
 
     for out in outputs:
         with tempfile.TemporaryDirectory(prefix="omega-package-") as td:
@@ -96,6 +102,9 @@ def main() -> int:
             if extracted_manifest(extracted) != files:
                 raise SystemExit(f"Manifest mismatch after packaging {out.name}")
             run_validator(extracted, strict=True)
+
+    if sha256(zip_out) != sha256(skill_out):
+        raise SystemExit("Compatibility .skill artifact must be byte-identical to canonical ZIP")
 
     for out in outputs:
         print(f"{out} sha256={sha256(out)} files={len(files)} bytes={out.stat().st_size}")
