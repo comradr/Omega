@@ -104,6 +104,15 @@ def main() -> int:
                 errors.append(f"Omega agents/openai.yaml missing expected metadata: {expected}")
         if "$prompt-architect-omega" in agent_text:
             errors.append("Omega default_prompt must not contain invented dollar-style skill invocation")
+    for rel in (
+        "scripts/prepare_ab_eval.py",
+        "scripts/aggregate_ab_eval.py",
+        "scripts/score_trigger_eval.py",
+        "evals/README.md",
+    ):
+        if not (root / rel).is_file():
+            errors.append(f"empirical harness file missing: {rel}")
+
     routing = (root / "references" / "overhead-and-routing.md").read_text(encoding="utf-8").lower()
     for phrase in ("no skill search", "no skill search, task skill, or agents", "skip it"):
         if phrase in routing:
