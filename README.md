@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current stable release: `1.0.0`. It uses a compact discovery surface, progressive disclosure, adaptive Direct / Architect / System routing, architecture-state caching, runtime adaptation, trust boundaries, behavioral regression corpora, and automated CI. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
+Current stable release: `1.0.1`. It keeps the compact 1.0 runtime behavior and adds stricter OpenAI-aligned bundle validation, package-shape checks, validator regression tests, and downloadable CI artifacts. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
 
 
 ## Install / use
