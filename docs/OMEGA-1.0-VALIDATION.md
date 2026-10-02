@@ -98,3 +98,20 @@ The hardening validator/package pipeline now checks those limits before release,
 The 1.0.1 hardening pull request passed the complete GitHub validation workflow. The generated Actions artifact was downloaded independently, both bundled files were inspected, the inner skill ZIP contained a single `prompt-architect-omega/` root with 29 packaged files, and the extracted bundle passed validator, static architecture evals, and Python compilation again.
 
 The 1.0.1 change set does not modify `SKILL.md`, trigger datasets, or runtime reference behavior relative to stable 1.0.0; it hardens validation, packaging, and release evidence only.
+
+
+## 1.0.2 validator semantics
+
+A follow-up standards review found that the 1.0.1 generic validator was stricter than the OpenAI skill format in one area: it required `agents/openai.yaml`, `default_prompt`, and `allow_implicit_invocation` for every skill.
+
+Current OpenAI documentation treats `agents/openai.yaml` as optional. When present, the `interface` mapping requires non-empty `display_name` and `short_description`; `default_prompt` and policy fields are optional.
+
+Version 1.0.2 fixes this separation:
+
+- the generic validator accepts a valid skill with no `agents/openai.yaml`;
+- a provided agent metadata file must contain the required interface fields;
+- optional `default_prompt` and policy fields are validated only when present;
+- Omega's own stronger metadata expectations remain enforced by Omega-specific static evals;
+- the validator regression suite is now an explicit GitHub Actions step.
+
+This change affects validation/tooling only and does not alter Omega's runtime prompt-engineering behavior.
