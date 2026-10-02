@@ -64,17 +64,23 @@ def parse_agent_metadata(text: str) -> dict[str, dict[str, object]]:
     for lineno, raw in enumerate(text.splitlines(), start=1):
         if not raw.strip() or raw.lstrip().startswith("#"):
             continue
-        indent = len(raw) - len(raw.lstrip(" "))
+        leading = raw[: len(raw) - len(raw.lstrip())]
+        if "\t" in leading:
+            raise ValueError(f"Tabs are not supported in agents/openai.yaml indentation on line {lineno}")
+        indent = len(leading)
         stripped = raw.strip()
-        if "\t" in raw[:indent]:
-            raise ValueError(f"Tabs are not supported in agents/openai.yaml line {lineno}")
         if indent == 0:
-            if not stripped.endswith(":"):
+            if ":" not in stripped:
                 raise ValueError(f"Expected top-level mapping key on line {lineno}")
-            current = stripped[:-1].strip()
+            key, value = stripped.split(":", 1)
+            current = key.strip()
             if not current:
                 raise ValueError(f"Empty top-level key on line {lineno}")
             sections.setdefault(current, {})
+            if value.strip():
+                # Valid YAML also permits inline mappings. Without a YAML dependency,
+                # record the value and let the platform perform full schema validation.
+                sections[current]["__inline__"] = value.strip()
             continue
         if current is None:
             raise ValueError(f"Nested value before top-level section on line {lineno}")
@@ -189,6 +195,8 @@ def main() -> int:
         interface = sections.get("interface")
         if not isinstance(interface, dict):
             errors.append("agents/openai.yaml must contain an interface mapping")
+        elif "__inline__" in interface:
+            warnings.append("agents/openai.yaml uses inline interface YAML; deep field validation deferred to platform")
         else:
             display = interface.get("display_name")
             short = interface.get("short_description")
@@ -204,6 +212,8 @@ def main() -> int:
         if policy is not None:
             if not isinstance(policy, dict):
                 errors.append("agents/openai.yaml policy must be a mapping when provided")
+            elif "__inline__" in policy:
+                warnings.append("agents/openai.yaml uses inline policy YAML; deep field validation deferred to platform")
             else:
                 implicit = policy.get("allow_implicit_invocation")
                 if implicit is not None and not isinstance(implicit, bool):
