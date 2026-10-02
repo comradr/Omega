@@ -54,6 +54,17 @@ def main() -> int:
     if len(behavior_cases) < 9:
         errors.append("behavior eval set must contain at least 9 cases")
 
+    benchmark = json.loads((root / "evals" / "benchmark-cases.json").read_text(encoding="utf-8"))
+    benchmark_cases = benchmark.get("cases", [])
+    if len(benchmark_cases) < 12:
+        errors.append("benchmark corpus must contain at least 12 cases")
+    valid_routes = {"direct", "architect", "system"}
+    for case in benchmark_cases:
+        if case.get("route") not in valid_routes:
+            errors.append(f"benchmark case {case.get('id')} has invalid route")
+        if not case.get("must") or not isinstance(case.get("must_not"), list):
+            errors.append(f"benchmark case {case.get('id')} lacks must/must_not contract")
+
     routing = (root / "references" / "overhead-and-routing.md").read_text(encoding="utf-8").lower()
     for phrase in ("no skill search", "no skill search, task skill, or agents", "skip it"):
         if phrase in routing:
