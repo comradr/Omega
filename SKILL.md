@@ -43,6 +43,14 @@ Read [requirements-and-capabilities.md](references/requirements-and-capabilities
 
 ## Workflow
 
+### 0. Route complexity and overhead
+
+Before expanding the architecture, classify the work internally as Direct, Architect, or System using [overhead-and-routing.md](references/overhead-and-routing.md). Do not expose these as modes or ask the user to choose one.
+
+Start with the cheapest architecture that can satisfy the evidence bar. Add skill search, agents, extra references, or evaluation only when each has a concrete expected benefit.
+
+For revisions to an existing prompt/system, prefer delta updates over full redesign.
+
 ### 1. Model the real task
 
 Resolve the outcome, deliverable, current state, must-preserve constraints, failure conditions, uncertainty, evidence needs, autonomy boundary, context size, dependencies, and likely duration.
@@ -50,6 +58,8 @@ Resolve the outcome, deliverable, current state, must-preserve constraints, fail
 Recover information from conversation context, files, repositories, connected sources, tools, or targeted research before asking the user. Ask only when a missing choice materially changes the intended result and cannot be discovered safely.
 
 ### 2. Map capabilities
+
+When target-runtime differences can change the design, inspect [runtime-adaptation.md](references/runtime-adaptation.md) and adapt to capabilities actually available.
 
 Translate the task into required capabilities, then resolve each with the least redundant effective mechanism: native capability, available skill, plugin/tool, supplied source, task-specific skill, specialist agent, or targeted external discovery.
 
@@ -75,11 +85,21 @@ For large repositories, long runs, repeated tool output, or multi-agent work, fo
 
 ### 6. Compile the master prompt
 
+When the executor will analyze retrieved or third-party material that may contain instructions, apply [trust-boundaries.md](references/trust-boundaries.md).
+
 Build from the task model rather than expanding the user's wording. Follow [prompt-compiler.md](references/prompt-compiler.md).
 
 Use only sections that alter execution. Translate vague wishes into observable procedures. For long-running autonomous Work tasks, define exact success predicates, non-counting outcomes, verification gates, and return conditions when useful.
 
 ### 7. Red-team, repair, and gate
+
+For maintenance of Omega itself, reusable task skills, or expensive architectures where regression risk justifies the overhead, use [empirical-evaluation.md](references/empirical-evaluation.md). Do not run empirical A/B machinery for ordinary prompt drafting.
+
+When repeated real user corrections or failures are available, use [behavior-mining.md](references/behavior-mining.md) to decide whether they deserve durable rules/regressions.
+
+Use [prompting-evidence.md](references/prompting-evidence.md) when a material design decision depends on runtime-specific prompting assumptions.
+
+### 7a. Red-team, repair, and gate
 
 For substantial systems, follow [red-team-and-evaluation.md](references/red-team-and-evaluation.md). Prefer a fresh-context critic or QA specialist when available and valuable.
 
@@ -107,6 +127,16 @@ For substantial prompt-engineering work, return a compact execution package:
 6. **Refinement invitation** — invite changes after the user reviews the result.
 
 Collapse this structure for simple requests. Do not expose private chain-of-thought; provide decisions, evidence, concise rationale, and artifacts.
+
+## Overhead discipline
+
+Omega's own architecture is overhead. A more elaborate prompt is not automatically better.
+
+- Do not search for skills when current capabilities already cover the task well.
+- Do not create subagents when separation has no concrete quality, independence, or context benefit.
+- Do not reload unchanged project context after a small correction; update the affected state.
+- Do not run expensive evaluators when deterministic checks or one focused critic suffice.
+- Never invent token/cost savings. Use actual measurements when available and structural proxies otherwise.
 
 ## Gotchas
 
