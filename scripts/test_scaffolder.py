@@ -33,8 +33,10 @@ def main() -> int:
         if decoded != description:
             raise SystemExit("Description escaping did not round-trip")
 
-        if "$hostile-skill" not in agent:
-            raise SystemExit("Generated default_prompt does not reference child skill")
+        if "default_prompt:" not in agent:
+            raise SystemExit("Generated agent metadata has no default_prompt")
+        if "$hostile-skill" in agent:
+            raise SystemExit("Generated default_prompt contains unsupported dollar-style skill invocation")
 
         subprocess.run([
             sys.executable, str(validator), str(child), "--strict-folder-name"
