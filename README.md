@@ -41,4 +41,4 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current repository baseline: production-candidate architecture. The next development track adds empirical A/B evaluation, trigger evaluation, runtime adaptation, behavior mining, trust boundaries, and stronger overhead/ROI controls.
+Main branch remains the 0.9.0 baseline while `omega-1.0` is the active 1.0 release-candidate branch. The candidate adds adaptive complexity routing, architectural-overhead controls, runtime adaptation, trust boundaries, behavior mining, and empirical evaluation.
