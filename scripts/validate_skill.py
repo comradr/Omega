@@ -10,6 +10,8 @@ from pathlib import Path
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 MD_LINK_RE = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD|CHANGEME)\b", re.IGNORECASE)
+MAX_FILES = 500
+MAX_FILE_BYTES = 25 * 1024 * 1024
 
 def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
     if not text.startswith("---\n"):
@@ -78,7 +80,20 @@ def main() -> int:
     root = Path(args.root).resolve()
     errors: list[str] = []
     warnings: list[str] = []
+    all_files = [p for p in root.rglob("*") if p.is_file() and "__pycache__" not in p.parts]
+    if len(all_files) > MAX_FILES:
+        errors.append(f"Skill contains {len(all_files)} files; OpenAI limit is {MAX_FILES}")
+    for p in all_files:
+        if p.stat().st_size > MAX_FILE_BYTES:
+            errors.append(f"{p.relative_to(root)} exceeds the 25 MB uncompressed file limit")
+
+    manifests = [p for p in all_files if p.name.lower() == "skill.md"]
+    if len(manifests) != 1:
+        errors.append(f"Exactly one SKILL.md/skill.md is required; found {len(manifests)}")
+
     skill = root / "SKILL.md"
+    if not skill.is_file() and len(manifests) == 1:
+        skill = manifests[0]
 
     if not skill.is_file():
         errors.append("Missing SKILL.md")
@@ -104,8 +119,10 @@ def main() -> int:
             errors.append(f"Folder name '{root.name}' must match skill name '{name}'")
         if not description or len(description) > 1024:
             errors.append("Description must be non-empty and at most 1,024 characters")
+        if not body.strip():
+            errors.append("Skill instructions/body must be non-empty")
         if len(body.splitlines()) > 500:
-            errors.append("SKILL.md body exceeds 500 lines")
+            warnings.append("SKILL.md body exceeds 500 lines; consider progressive disclosure")
         if PLACEHOLDER_RE.search(body):
             errors.append("SKILL.md contains unresolved TODO/TBD/CHANGEME placeholder")
 
