@@ -123,7 +123,7 @@ Earlier validation accepted only `name` and `description`. The Agent Skills spec
 
 1.0.3 expands the dependency-free preflight parser and adds regression tests for valid optional fields, metadata type errors, overlong compatibility text, and unknown frontmatter.
 
-### 6. Plus distribution path
+### 7. Plus distribution path
 
 Current OpenAI Plugins can be skills-only, and the Plugin Directory is available across ChatGPT plans subject to account/surface capability. 1.0.3 therefore adds a generated `prompt-architect-omega-plugin.zip` wrapper without duplicating the canonical skill source.
 
@@ -135,13 +135,29 @@ The release now supports:
 
 The wrapper is packaging/distribution only and does not alter Omega runtime instructions.
 
-### 7. Packaged static-eval false failure
+### 8. Packaged static-eval false failure
 
 Independent inspection of a CI artifact found that the packaged skill's static evaluator still expected repository-only plugin-wrapper tooling. The skill itself was valid, but an installed copy could falsely report missing files.
 
 1.0.3 fixes the evaluator to distinguish repository mode from packaged-skill mode. The release pipeline was also strengthened: after packaging, both the canonical Skill ZIP and the skill nested inside the Plugin ZIP must run their own static evals successfully.
 
 This defect was found only by inspecting the actual release artifact, so artifact-level static evaluation is now a permanent release gate.
+
+## Promotion record
+
+Version `1.0.3` is promoted to `main`.
+
+Verified release evidence:
+
+- final artifact hotfix PR passed GitHub Actions;
+- canonical Skill ZIP passed strict validator and packaged static evals;
+- compatibility `.skill` is byte-identical to the canonical ZIP;
+- skills-only Plugin ZIP passed structure checks and its nested Omega skill passed strict validator and packaged static evals;
+- canonical and nested plugin-skill file manifests matched;
+- packaged-script security scan found no environment/secret reads, network client calls, telemetry, or external transfer commands;
+- post-merge GitHub Actions on `main` passed.
+
+The only intentionally unclaimed property is empirical superiority over a strong no-Omega baseline, because that requires fresh comparable model runs rather than repository tests.
 
 ## Token/context overhead
 
@@ -209,4 +225,4 @@ A final 1.0.3 promotion requires:
 8. README / Work bootstrap consistent with the final package;
 9. no claim of empirical quality improvement without empirical evidence.
 
-Only after all applicable gates pass should 1.0.3 be merged to `main`.
+All applicable deterministic, packaging, artifact, documentation, and post-merge CI gates listed above have passed for 1.0.3. Empirical model-quality superiority remains a separate future measurement, not a release blocker.
