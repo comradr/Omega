@@ -84,7 +84,7 @@ def main() -> int:
             run_validator(extracted, strict=True)
 
     for out in outputs:
-        print(f"{out} sha256={sha256(out)} files={len(files)}")
+        print(f"{out} sha256={sha256(out)} files={len(files)} bytes={out.stat().st_size}")
     return 0
 
 if __name__ == "__main__":
