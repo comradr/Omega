@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.1-rc1 — Packaging and validation hardening
+## 1.0.1 — Packaging and validation hardening
 
 - Leaves the stable 1.0 runtime/discovery behavior unchanged.
 - Aligns bundle checks with current OpenAI skill limits: exactly one case-insensitive `SKILL.md`, non-empty skill body, at most 500 files, at most 25 MB per uncompressed file, and at most 50 MB per zip bundle.
