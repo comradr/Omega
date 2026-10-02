@@ -63,6 +63,10 @@ def main() -> int:
     if not (case_ids == set(candidate) == set(key) == set(judgments)):
         raise SystemExit("baseline, candidate, key, and judgments must contain identical case ids")
 
+    for case_id, mapping in key.items():
+        if {mapping.get("A"), mapping.get("B")} != {"baseline", "candidate"}:
+            raise SystemExit(f"{args.key}: case {case_id} must map A/B exactly once to baseline/candidate")
+
     counts = {"baseline": 0, "candidate": 0, "tie": 0}
     resolved: list[dict] = []
 
