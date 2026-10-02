@@ -9,8 +9,11 @@ import zipfile
 from pathlib import Path
 
 RUNTIME_DIRS = {"agents", "assets", "references", "scripts", "evals"}
-EXCLUDED_NAMES = {"test_scaffolder.py", "run_ci_checks.py"}
+EXCLUDED_NAMES = {"test_scaffolder.py", "test_validator.py", "run_ci_checks.py"}
 EXCLUDED_SUFFIXES = {".zip", ".skill"}
+MAX_FILES = 500
+MAX_FILE_BYTES = 25 * 1024 * 1024
+MAX_ZIP_BYTES = 50 * 1024 * 1024
 
 def sha256(path: Path) -> str:
     h = hashlib.sha256()
@@ -43,7 +46,13 @@ def package_files(root: Path) -> list[str]:
             if p.suffix in EXCLUDED_SUFFIXES or p.name == ".DS_Store":
                 continue
             files.append(str(p.relative_to(root)).replace("\\", "/"))
-    return sorted(set(files))
+    files = sorted(set(files))
+    if len(files) > MAX_FILES:
+        raise SystemExit(f"Package has {len(files)} files; OpenAI limit is {MAX_FILES}")
+    for rel in files:
+        if (root / rel).stat().st_size > MAX_FILE_BYTES:
+            raise SystemExit(f"{rel} exceeds the 25 MB uncompressed file limit")
+    return files
 
 def extracted_manifest(root: Path) -> list[str]:
     return sorted(
@@ -72,11 +81,16 @@ def main() -> int:
         with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as zf:
             for rel in files:
                 zf.write(root / rel, Path(name) / rel)
+        if out.stat().st_size > MAX_ZIP_BYTES:
+            raise SystemExit(f"{out.name} exceeds the 50 MB upload limit")
         outputs.append(out)
 
     for out in outputs:
         with tempfile.TemporaryDirectory(prefix="omega-package-") as td:
             with zipfile.ZipFile(out) as zf:
+                roots = {Path(entry).parts[0] for entry in zf.namelist() if entry and not entry.endswith("/")}
+                if roots != {name}:
+                    raise SystemExit(f"{out.name} must contain exactly one top-level folder named {name}")
                 zf.extractall(td)
             extracted = Path(td) / name
             if extracted_manifest(extracted) != files:
@@ -84,7 +98,7 @@ def main() -> int:
             run_validator(extracted, strict=True)
 
     for out in outputs:
-        print(f"{out} sha256={sha256(out)} files={len(files)}")
+        print(f"{out} sha256={sha256(out)} files={len(files)} bytes={out.stat().st_size}")
     return 0
 
 if __name__ == "__main__":
