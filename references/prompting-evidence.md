@@ -91,3 +91,13 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Constraints used by Omega preflight:** `compatibility` is at most 500 characters; `metadata` is a string-to-string mapping.
 - **Architectural implication:** Omega's generic task-skill validator accepts the documented optional fields rather than imposing the narrower early-project schema.
 - **Source:** Agent Skills specification and OpenAI Developers skill validation guidance.
+
+
+### Skills-only plugin distribution
+
+- **Evidence class:** official OpenAI Help Center and Developers documentation.
+- **Last verified:** 2026-10-02.
+- **Observed behavior:** plugins can package Skills without an MCP server; portable Agent Plugin packages use root `plugin.json` and discover skills from `skills/`.
+- **Availability:** the Plugin Directory is documented across ChatGPT plans, while installation and individual capabilities still vary by plan, workspace, role, region, and surface.
+- **Architectural implication:** Omega can ship a generated skills-only Plugin ZIP as a distribution wrapper while retaining the root Agent Skill as the only source of truth.
+- **Sources:** OpenAI Developers “Package your plugin”, “Plugin architecture”, and OpenAI Help Center “Plugins in ChatGPT”.
