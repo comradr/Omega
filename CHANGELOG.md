@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.0-rc2 — Lean core and hardened release checks
+
+- Reduced `SKILL.md` below the 0.9 baseline while retaining the 1.0 architecture through progressive disclosure.
+- Added architecture-state cache and delta invalidation rules.
+- Added functional prompt-technique selector.
+- Hardened repository validation, package extraction/revalidation, and hostile-input scaffolder tests.
+- Added GitHub Actions CI.
+- Added a 12-case routing/behavior benchmark corpus and release validation report.
+- Development/CI files are excluded from the installable skill package.
+
 ## 1.0.0-rc1 — Adaptive, lower-overhead architecture
 
 - Added hidden Direct / Architect / System routing.
