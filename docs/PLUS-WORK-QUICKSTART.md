@@ -8,7 +8,17 @@ Use this path when ChatGPT Work is available but native ChatGPT Skill upload/ins
 > - https://help.openai.com/en/articles/20001066-skills-in-chatgpt
 > - https://help.openai.com/en/articles/20001275/
 
-## Recommended setup
+## Preferred path order
+
+1. **Skills-only Plugin** — if your ChatGPT surface exposes Personal/local plugin installation, use the generated `prompt-architect-omega-plugin.zip`.
+2. **Native Skill** — if your account exposes native Skill upload, use `prompt-architect-omega.zip`.
+3. **Bootstrap fallback** — otherwise use the short GitHub bootstrap below.
+
+The Plugin Directory itself is available across ChatGPT plans, but installation and the capabilities shown to you still depend on plan, workspace, role, region, and surface. Local marketplace authoring/testing is primarily documented for the ChatGPT desktop app / Codex workflow, so the bootstrap remains the practical fallback on surfaces that do not expose personal plugin installation.
+
+See [PLUGIN-WRAPPER.md](PLUGIN-WRAPPER.md) for package details.
+
+## Recommended bootstrap setup
 
 1. Create a separate Work project/chat for prompt engineering.
 2. Make sure the run can read the public repository `https://github.com/comradr/Omega` through GitHub, web access, or another supported repository path.

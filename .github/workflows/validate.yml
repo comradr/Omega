@@ -2,7 +2,7 @@ name: Validate Omega
 
 on:
   push:
-    branches: [main, omega-1.0]
+    branches: [main]
   pull_request:
 
 permissions:
@@ -24,14 +24,21 @@ jobs:
         run: python scripts/test_validator.py
       - name: Scaffolder hostile-input regression
         run: python scripts/test_scaffolder.py
+      - name: Empirical harness regression
+        run: python scripts/test_eval_harness.py
+      - name: Plugin wrapper regression
+        run: python scripts/test_plugin_package.py
       - name: Compile Python
         run: python -m compileall -q scripts
       - name: Package and revalidate archives
         run: python scripts/package_skill.py .
+      - name: Build skills-only plugin wrapper
+        run: python scripts/package_plugin.py .
       - name: Stage installable skill bundles
         run: |
           cp ../prompt-architect-omega.zip ./prompt-architect-omega.zip
           cp ../prompt-architect-omega.skill ./prompt-architect-omega.skill
+          cp ../prompt-architect-omega-plugin.zip ./prompt-architect-omega-plugin.zip
       - name: Upload installable skill bundles
         uses: actions/upload-artifact@v4
         with:
@@ -39,4 +46,5 @@ jobs:
           path: |
             prompt-architect-omega.zip
             prompt-architect-omega.skill
+            prompt-architect-omega-plugin.zip
           if-no-files-found: error

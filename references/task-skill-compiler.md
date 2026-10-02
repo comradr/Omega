@@ -19,14 +19,14 @@ Master prompt owns the current objective, current inputs, one-run constraints, t
 ## Preferred structure
 
 - SKILL.md
-- agents/openai.yaml
+- agents/openai.yaml — optional OpenAI presentation/policy metadata
 - references/ only for material progressive disclosure
 - scripts/ for deterministic fragile procedures
 - assets/ for reusable templates
 
 Keep frontmatter limited to name and description. Treat description as the trigger surface. Keep SKILL.md concise and procedural.
 
-When OpenAI agent metadata is used, default_prompt should explicitly reference the skill by $skill-name.
+When OpenAI agent metadata is used, write `default_prompt` as a normal user-facing starter prompt. Do not invent invocation syntax such as `$skill-name` unless the target runtime explicitly documents it.
 
 Do not invent icons, colors, dependencies, or runtime capabilities. Do not vendor entire third-party skills into a generated task skill.
 

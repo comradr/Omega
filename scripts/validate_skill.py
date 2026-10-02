@@ -13,33 +13,126 @@ PLACEHOLDER_RE = re.compile(r"\b(?:TODO|TBD|CHANGEME)\b", re.IGNORECASE)
 MAX_FILES = 500
 MAX_FILE_BYTES = 25 * 1024 * 1024
 
-def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
+def parse_yaml_scalar(value: str) -> object:
+    value = value.strip()
+    if not value:
+        return ""
+    if value.startswith('"'):
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError as exc:
+            raise ValueError("Malformed double-quoted YAML scalar") from exc
+    if value.startswith("'"):
+        if len(value) < 2 or not value.endswith("'"):
+            raise ValueError("Malformed single-quoted YAML scalar")
+        return value[1:-1].replace("''", "'")
+
+    # Strip an unquoted YAML comment.
+    comment = re.search(r"\s+#", value)
+    if comment:
+        value = value[: comment.start()].rstrip()
+
+    lowered = value.lower()
+    if lowered in {"true", "false"}:
+        return lowered == "true"
+    if lowered in {"null", "~"}:
+        return None
+    if re.fullmatch(r"[-+]?\d+", value):
+        return int(value)
+    if re.fullmatch(r"[-+]?(?:\d+\.\d*|\d*\.\d+)(?:[eE][-+]?\d+)?", value):
+        return float(value)
+    return value
+
+
+def parse_frontmatter(text: str) -> tuple[dict[str, object], str]:
+    """Parse the Agent Skills frontmatter subset without an external YAML dependency.
+
+    The Agent Skills schema uses top-level scalar fields plus an optional
+    string-to-string metadata mapping. Block scalars are supported for string fields.
+    Complex YAML features outside that schema remain the platform validator's job.
+    """
     if not text.startswith("---\n"):
         raise ValueError("SKILL.md must start with YAML frontmatter")
     end = text.find("\n---\n", 4)
     if end == -1:
         raise ValueError("SKILL.md frontmatter is not closed")
+
     raw = text[4:end]
-    fields: dict[str, str] = {}
-    for line in raw.splitlines():
-        if not line.strip():
+    lines = raw.splitlines()
+    fields: dict[str, object] = {}
+    i = 0
+
+    while i < len(lines):
+        raw_line = lines[i]
+        if not raw_line.strip() or raw_line.lstrip().startswith("#"):
+            i += 1
             continue
-        if ":" not in line:
-            raise ValueError(f"Invalid frontmatter line: {line!r}")
-        key, value = line.split(":", 1)
-        key, value = key.strip(), value.strip()
+        if raw_line[:1].isspace():
+            raise ValueError(f"Unexpected indentation in frontmatter line {i + 1}")
+        if ":" not in raw_line:
+            raise ValueError(f"Invalid frontmatter line {i + 1}: {raw_line!r}")
+
+        key, raw_value = raw_line.split(":", 1)
+        key = key.strip()
+        raw_value = raw_value.strip()
         if not key:
-            raise ValueError("Empty frontmatter key")
-        if value.startswith('"'):
-            try:
-                parsed = json.loads(value)
-                if not isinstance(parsed, str):
-                    raise ValueError
-                value = parsed
-            except Exception as exc:
-                raise ValueError(f"Invalid quoted scalar for {key}") from exc
-        fields[key] = value
+            raise ValueError(f"Empty frontmatter key on line {i + 1}")
+        if key in fields:
+            raise ValueError(f"Duplicate frontmatter key: {key}")
+
+        # metadata is the only mapping-valued field in the Agent Skills schema.
+        if key == "metadata" and not raw_value:
+            metadata: dict[str, object] = {}
+            i += 1
+            while i < len(lines):
+                nested = lines[i]
+                if not nested.strip() or nested.lstrip().startswith("#"):
+                    i += 1
+                    continue
+                if not nested[:1].isspace():
+                    break
+                stripped = nested.strip()
+                if ":" not in stripped:
+                    raise ValueError(f"Invalid metadata entry on line {i + 1}")
+                mkey, mvalue = stripped.split(":", 1)
+                mkey = mkey.strip()
+                if not mkey or mkey in metadata:
+                    raise ValueError(f"Invalid or duplicate metadata key on line {i + 1}")
+                metadata[mkey] = parse_yaml_scalar(mvalue)
+                i += 1
+            fields[key] = metadata
+            continue
+
+        # Accept an inline metadata map as valid YAML without pretending this
+        # lightweight preflight can deeply parse every YAML flow-style edge case.
+        if key == "metadata" and raw_value.startswith("{") and raw_value.endswith("}"):
+            fields[key] = {"__inline__": raw_value}
+            i += 1
+            continue
+
+        # Support YAML literal/folded block scalars used by string fields.
+        if raw_value in {"|", "|-", "|+", ">", ">-", ">+"}:
+            fold = raw_value.startswith(">")
+            block: list[str] = []
+            i += 1
+            while i < len(lines):
+                nested = lines[i]
+                if nested and not nested[:1].isspace():
+                    break
+                if not nested.strip():
+                    block.append("")
+                    i += 1
+                    continue
+                block.append(nested.lstrip())
+                i += 1
+            fields[key] = (" " if fold else "\n").join(block).strip()
+            continue
+
+        fields[key] = parse_yaml_scalar(raw_value)
+        i += 1
+
     return fields, text[end + 5 :]
+
 
 def parse_scalar(value: str) -> object:
     value = value.strip()
@@ -142,19 +235,49 @@ def main() -> int:
             errors.append(str(exc))
             fields, body = {}, ""
 
-        extra = set(fields) - {"name", "description"}
+        allowed_frontmatter = {
+            "name",
+            "description",
+            "license",
+            "compatibility",
+            "metadata",
+            "allowed-tools",
+        }
+        extra = set(fields) - allowed_frontmatter
         if extra:
-            errors.append(f"Unsupported frontmatter fields: {sorted(extra)}")
+            errors.append(f"Unsupported Agent Skills frontmatter fields: {sorted(extra)}")
 
         name = fields.get("name", "")
         description = fields.get("description", "")
+        license_value = fields.get("license")
+        compatibility = fields.get("compatibility")
+        metadata = fields.get("metadata")
+        allowed_tools = fields.get("allowed-tools")
 
-        if not NAME_RE.fullmatch(name) or len(name) > 64:
+        if not isinstance(name, str) or not NAME_RE.fullmatch(name) or len(name) > 64:
             errors.append("Invalid skill name")
-        if args.strict_folder_name and name and root.name != name:
+        if args.strict_folder_name and isinstance(name, str) and name and root.name != name:
             errors.append(f"Folder name '{root.name}' must match skill name '{name}'")
-        if not description or len(description) > 1024:
-            errors.append("Description must be non-empty and at most 1,024 characters")
+        if not isinstance(description, str) or not description or len(description) > 1024:
+            errors.append("Description must be a non-empty string of at most 1,024 characters")
+
+        if license_value is not None and not isinstance(license_value, str):
+            errors.append("license must be a string when provided")
+        if compatibility is not None:
+            if not isinstance(compatibility, str) or not (1 <= len(compatibility) <= 500):
+                errors.append("compatibility must be a non-empty string of at most 500 characters")
+        if allowed_tools is not None and not isinstance(allowed_tools, str):
+            errors.append("allowed-tools must be a space-separated string when provided")
+        if metadata is not None:
+            if not isinstance(metadata, dict):
+                errors.append("metadata must be a string-to-string mapping")
+            elif "__inline__" in metadata:
+                warnings.append("inline metadata YAML accepted; deep metadata validation deferred to platform")
+            else:
+                for mkey, mvalue in metadata.items():
+                    if not isinstance(mkey, str) or not isinstance(mvalue, str):
+                        errors.append("metadata keys and values must be strings")
+                        break
         if not body.strip():
             errors.append("Skill instructions/body must be non-empty")
         if len(body.splitlines()) > 500:

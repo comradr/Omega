@@ -35,3 +35,15 @@ Use held-out cases when optimizing the description. Do not overfit wording.
 ## Stopping rule
 
 Empirical evaluation is itself overhead. Use it for changes whose regression risk or expected reuse justifies the cost; do not A/B-test every trivial prompt.
+
+
+## Repository harness
+
+When maintaining Omega itself, the repository includes a deterministic harness around externally produced model runs:
+
+- `scripts/prepare_ab_eval.py` creates blinded A/B packs and a separate secret mapping key;
+- `scripts/aggregate_ab_eval.py` resolves independent judgments and summarizes measured numeric overhead fields;
+- `scripts/score_trigger_eval.py` scores observed activation behavior by dev/holdout split;
+- `evals/README.md` defines the evidence format and promotion rules.
+
+The harness deliberately does **not** fabricate model runs or token counts. Baseline and candidate outputs must come from actual comparable executions.

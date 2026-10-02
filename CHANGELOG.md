@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.3 — Final architecture audit
+
+- Keeps the compact Omega runtime/routing architecture intact.
+- Removes the unsupported `$skill-name` convention from Omega and generated task-skill default prompts.
+- Marks `agents/openai.yaml` as optional task-skill presentation metadata rather than a mandatory structural component.
+- Clarifies that the OpenAI-targeted install artifact is the validated ZIP; `.skill` remains only a compatibility copy for runtimes that explicitly support that extension.
+- Adds executable blind A/B preparation and aggregation tools plus trigger dev/holdout scoring.
+- Adds a regression-tested empirical evaluation runbook without fabricating model outputs or token counts.
+- Adds CI coverage for the evaluation harness and removes the stale `omega-1.0` push branch from the workflow.
+- Adds a generated skills-only Plugin ZIP from the canonical skill source for Plugin-capable ChatGPT/Codex surfaces, without duplicating Omega source files.
+- Supports the documented Agent Skills optional frontmatter fields (`license`, `compatibility`, `metadata`, and experimental `allowed-tools`) in the generic validator.
+
 ## 1.0.2 — Standards-aligned generic validator
 
 - Leaves Omega runtime/discovery behavior unchanged.

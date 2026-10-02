@@ -1,6 +1,6 @@
 interface:
   display_name: "Prompt Architect Omega"
   short_description: "Design prompts, skills, agents, and Work systems"
-  default_prompt: "Use $prompt-architect-omega to turn my goal into a production-ready ChatGPT Work execution system."
+  default_prompt: "Turn my goal into the smallest production-ready AI execution system, using tools, skills, agents, context, and verification only when they materially improve the result."
 policy:
   allow_implicit_invocation: true
