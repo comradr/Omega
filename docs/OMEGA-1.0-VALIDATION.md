@@ -76,3 +76,18 @@ Stable 1.0 promotion requires:
 ## Stable 1.0 promotion record
 
 Version `1.0.0` is promoted after the RC3 branch passed the repository validation workflow and the final red-team pass found no unresolved material architecture defect. The release still does not claim a measured model-execution quality win over 0.9; that claim requires the independent differential benchmark described above.
+
+
+## 1.0.1 hardening
+
+The 1.0.1 hardening track does not change Omega's runtime prompt-engineering behavior. It tightens packaging and validation around the stable 1.0 skill.
+
+Current OpenAI documentation verified on 2026-10-02 specifies:
+
+- exactly one case-insensitive `SKILL.md` / `skill.md` in a skill bundle;
+- non-empty skill instructions;
+- maximum zip upload size of 50 MB;
+- maximum 500 files per skill version;
+- maximum 25 MB uncompressed size per file.
+
+The hardening validator/package pipeline now checks those limits before release, while keeping the existing smaller internal progressive-disclosure guards as Omega-specific quality checks rather than claiming they are OpenAI platform limits.
