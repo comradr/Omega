@@ -102,6 +102,10 @@ def main() -> int:
             if extracted_manifest(extracted) != files:
                 raise SystemExit(f"Manifest mismatch after packaging {out.name}")
             run_validator(extracted, strict=True)
+            subprocess.run(
+                [sys.executable, str(extracted / "scripts" / "run_static_evals.py"), str(extracted)],
+                check=True,
+            )
 
     if sha256(zip_out) != sha256(skill_out):
         raise SystemExit("Compatibility .skill artifact must be byte-identical to canonical ZIP")
