@@ -1,0 +1,28 @@
+name: Validate Omega
+
+on:
+  push:
+    branches: [main, omega-1.0]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate skill
+        run: python scripts/validate_skill.py .
+      - name: Static architecture evals
+        run: python scripts/run_static_evals.py .
+      - name: Scaffolder hostile-input regression
+        run: python scripts/test_scaffolder.py
+      - name: Compile Python
+        run: python -m compileall -q scripts
+      - name: Package and revalidate archives
+        run: python scripts/package_skill.py .

@@ -33,4 +33,4 @@ Fail the candidate if it:
 - carries design-plane meta-skills into execution without need;
 - grows the core instead of using progressive disclosure.
 
-Future versions should add empirical baseline-vs-Omega, trigger, runtime-adaptation, injection/trust-boundary, and repeated-correction cases.
+Omega 1.0 adds explicit trigger, runtime-adaptation, trust-boundary, repeated-correction, and ROI cases in `evals/`. Future versions should add execution-backed baseline-vs-Omega measurements where the runtime exposes comparable cost and quality evidence.

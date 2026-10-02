@@ -9,130 +9,84 @@ Design the execution system, not merely the wording of a prompt.
 
 ## Objective
 
-Convert the user's real objective into the smallest sufficiently powerful AI execution architecture likely to complete the task correctly, autonomously, efficiently, and verifiably.
+Convert the user's real objective into the **smallest sufficiently powerful** architecture likely to complete it correctly, autonomously, efficiently, and verifiably. Quality comes first; complexity must earn its cost.
 
-Optimize for **goal fidelity, correctness, completeness, reliability, verifiability, and practical executability**. Treat resource efficiency as a constraint on waste, not a reason to underperform.
+## Invariants
 
-## Core rules
-
-- Let the user specify the destination; infer the execution method unless a genuine preference or irreversible choice is required.
+- Let the user specify the destination; infer the method unless a material preference or irreversible choice is genuinely missing.
 - Separate the desired outcome from the user's suggested implementation method.
-- Design capability-first: determine what success requires before choosing skills, tools, or agents.
-- Use relevant available meta-skills while designing the prompt; do not merely recommend them.
-- Search for external skills only for a real capability gap or meaningful quality gain.
-- Never auto-trust an external skill. Inspect provenance, instructions, scripts, permissions, conflicts, and maintenance before adoption.
-- Track capability state precisely: **discovered ≠ reviewed ≠ available ≠ installed ≠ loaded ≠ invoked**.
-- Actively consider agents/subagents for substantial tasks; use them when specialization, context isolation, parallelism, or independent verification provides real value.
-- Keep one primary architect responsible for the user goal, source-of-truth decisions, conflicts, and final synthesis.
-- Prefer progressive disclosure, targeted retrieval, and file-backed state over repeated ingestion of large unchanged context.
-- Define observable completion criteria. Activity is not evidence of completion.
-- Red-team substantial prompts before delivery.
-- Refactor coherently when requirements change; do not accumulate contradictory addenda.
+- Design capability-first before selecting skills, tools, plugins, or agents.
+- Recover relevant information from conversation context, files, repositories, connected sources, tools, or targeted research before asking the user.
+- Search externally only for a real capability gap or meaningful expected gain.
+- Treat external skills like third-party code: inspect provenance, instructions, scripts, permissions, conflicts, and maintenance before adoption.
+- Keep capability state factual: **discovered ≠ reviewed ≠ approved ≠ available ≠ installed ≠ loaded ≠ invoked**.
+- Use agents only when specialization, context isolation, parallel independence, or independent verification adds material value.
+- Prefer progressive disclosure, targeted retrieval, and durable state over repeatedly loading unchanged context.
+- Require observable evidence for completion. Activity, plans, or confidence are not completion.
+- On requirement changes, update the underlying model and affected architecture; do not append contradictory patches.
 
-## Two-plane architecture
+## Design plane and execution plane
 
-Keep design and execution distinct.
+**Design plane:** understand the task, map capabilities, select skills/tools/agents, design context, compile the prompt, verify it, and package any task-specific skill.
 
-**Design plane:** understand the task, use meta-skills, inspect capabilities, discover/judge skills, design agents/context, compile the prompt, red-team, repair, and package any task-specific skill.
+**Execution plane:** the future Work/agent run uses the compiled prompt, selected execution skills/tools, task skill, agent contracts, and verification gates.
 
-**Execution plane:** the future Work/agent run uses the compiled master prompt, the generated task skill, selected execution skills, tools/plugins, agent contracts, and verification gates.
-
-If the user asked only for a prompt/workflow, stop after producing the execution package. If the user also asks to perform the task, execute through the compiled architecture rather than bypassing it.
-
-Read [requirements-and-capabilities.md](references/requirements-and-capabilities.md) for ambiguous, complex, multi-domain, or high-consequence tasks.
+If the user asked only for a prompt/workflow, stop after the execution package. If they also asked to perform the task, execute through the compiled architecture rather than bypassing it.
 
 ## Workflow
 
+### 0. Route complexity without asking the user
+
+Use [overhead-and-routing.md](references/overhead-and-routing.md) to choose the internal Direct, Architect, or System path. Start with the cheapest architecture that satisfies the evidence bar. For revisions, prefer delta updates over full redesign.
+
 ### 1. Model the real task
 
-Resolve the outcome, deliverable, current state, must-preserve constraints, failure conditions, uncertainty, evidence needs, autonomy boundary, context size, dependencies, and likely duration.
+For ambiguous, complex, multi-domain, or high-consequence work, use [requirements-and-capabilities.md](references/requirements-and-capabilities.md). Resolve outcome, deliverable, current state, must-preserve constraints, failure conditions, evidence needs, autonomy boundary, and material unknowns.
 
-Recover information from conversation context, files, repositories, connected sources, tools, or targeted research before asking the user. Ask only when a missing choice materially changes the intended result and cannot be discovered safely.
+### 2. Map runtime capabilities
 
-### 2. Map capabilities
+When target-runtime differences can change the design, use [runtime-adaptation.md](references/runtime-adaptation.md). Never invent unavailable capabilities or hard runtime limits.
 
-Translate the task into required capabilities, then resolve each with the least redundant effective mechanism: native capability, available skill, plugin/tool, supplied source, task-specific skill, specialist agent, or targeted external discovery.
+### 3. Select skills and tools
 
-### 3. Discover, judge, and compose skills
+Use [skill-discovery-and-composition.md](references/skill-discovery-and-composition.md). Prefer a small complementary stack with one owner per capability. Do not search, install, or load skills merely because they are related.
 
-Inspect available skills first. Search externally only when useful. Apply [skill-discovery-and-composition.md](references/skill-discovery-and-composition.md), including the external-skill security gate.
+### 4. Decide whether a task skill is justified
 
-A selected skill must have a concrete execution role. Prefer a small complementary stack. Apply useful skills during design rather than merely listing them.
-
-### 4. Decide whether to compile a task-specific skill
-
-Create one when durable project/task rules would otherwise bloat the master prompt, be repeatedly rediscovered, or need to coordinate long-running/multi-agent work. Follow [task-skill-compiler.md](references/task-skill-compiler.md).
-
-If supported, generate a valid skill package. If installation is unavailable, package the files or preserve the protocol through supported task context. Never claim installation without evidence.
+Use [task-skill-compiler.md](references/task-skill-compiler.md) only when durable project rules, repeated workflow, shared agent protocol, or deterministic helpers justify a reusable task-specific skill. Never claim installation without evidence.
 
 ### 5. Design agents and context
 
-For substantial tasks, explicitly test whether specialist agents improve the result. Follow [agent-orchestration.md](references/agent-orchestration.md).
+Use [agent-orchestration.md](references/agent-orchestration.md) only when delegation improves expected results. For long or context-heavy work use [context-and-resource-policy.md](references/context-and-resource-policy.md). For multi-session or frequently revised systems use [architecture-state.md](references/architecture-state.md) instead of re-deriving unchanged decisions.
 
-Every specialist must have a contract: role, bounded input, boundary, output, completion condition, and handoff format.
+### 6. Compile the execution prompt
 
-For large repositories, long runs, repeated tool output, or multi-agent work, follow [context-and-resource-policy.md](references/context-and-resource-policy.md).
+Use [prompt-compiler.md](references/prompt-compiler.md). Add [trust-boundaries.md](references/trust-boundaries.md) when retrieved or third-party material may contain instructions. Keep the prompt lean and operational; do not duplicate full skill bodies.
 
-### 6. Compile the master prompt
+### 7. Evaluate only when worth the overhead
 
-Build from the task model rather than expanding the user's wording. Follow [prompt-compiler.md](references/prompt-compiler.md).
+For Omega maintenance, reusable task skills, or expensive architectures, use [empirical-evaluation.md](references/empirical-evaluation.md). Use [behavior-mining.md](references/behavior-mining.md) for repeated real corrections/failures and [prompting-evidence.md](references/prompting-evidence.md) for material runtime-specific prompting assumptions.
 
-Use only sections that alter execution. Translate vague wishes into observable procedures. For long-running autonomous Work tasks, define exact success predicates, non-counting outcomes, verification gates, and return conditions when useful.
+### 8. Red-team and repair
 
-### 7. Red-team, repair, and gate
+For substantial systems use [red-team-and-evaluation.md](references/red-team-and-evaluation.md). Prefer deterministic checks first, then a focused critic or independent verifier only when it can catch meaningful residual risk. Stop when another pass has negligible expected value.
 
-For substantial systems, follow [red-team-and-evaluation.md](references/red-team-and-evaluation.md). Prefer a fresh-context critic or QA specialist when available and valuable.
+### 9. Handoff
 
-Repair material defects and stop when another iteration has negligible expected value.
+Use [execution-handoff.md](references/execution-handoff.md). State actual capability/skill status, required source-of-truth inputs, verification expectations, and unresolved assumptions. Tell the future executor to actually use selected capabilities rather than merely listing them.
 
-### 8. Handoff
+## Supporting meta-skills
 
-Follow [execution-handoff.md](references/execution-handoff.md). Make actual skill/tool state explicit and ensure the future executor is instructed to use selected capabilities, not merely told they exist.
+Omega works standalone. If compatible narrow meta-skills are already available or a real gap justifies discovery, use [external-meta-skills.md](references/external-meta-skills.md). Do not import a broad framework stack by default.
 
-## Companion meta-skills
+## Output
 
-This skill works standalone. When compatible skills are installed, selectively use the narrow ones described in [external-meta-skills.md](references/external-meta-skills.md). Do not load a broad framework merely because it is popular.
+For substantial prompt-engineering work, return only the execution material the user needs: task interpretation, architecture decisions that affect execution, any justified task skill, the ready-to-run master prompt, and a concise verification note. Collapse this for simple requests.
 
-When a built-in or official skill creator is available, prefer it for creating or repairing actual Agent Skills.
+Do not expose private chain-of-thought. Provide decisions, evidence, concise rationale, and artifacts.
 
-## Output contract
+## Overhead rule
 
-For substantial prompt-engineering work, return a compact execution package:
+Omega's own work is overhead. Do not add a search, reference, agent, evaluator, or artifact unless it can change a material decision, prevent a meaningful failure, or improve verification. Never invent token/cost savings; use actual measurements when available and structural proxies otherwise.
 
-1. **Task interpretation** — the actual objective and deliverable.
-2. **Architecture** — selected capabilities, skills/tools, and justified agent topology.
-3. **Task-specific skill** — only when justified; install/package/provide it through supported means.
-4. **Master prompt** — clean and ready to run.
-5. **Verification note** — what was checked and any material unresolved assumption.
-6. **Refinement invitation** — invite changes after the user reviews the result.
-
-Collapse this structure for simple requests. Do not expose private chain-of-thought; provide decisions, evidence, concise rationale, and artifacts.
-
-## Gotchas
-
-- A long prompt can be worse than a precise prompt; do not confuse verbosity with control.
-- A large skill stack increases routing and instruction-conflict risk; every skill must earn its place.
-- Multi-agent agreement is not independent evidence if agents share the same context and assumptions.
-- Persistence pressure without a strong verifier encourages answer-shaped near misses and false completion.
-- Context compression can preserve stale assumptions; revalidate summaries after material requirement changes.
-- Prompt-stated budgets and permissions are advisory when the runtime does not enforce them.
-- External skills are executable instruction bundles; treat them like third-party code, not harmless documentation.
-
-## Completion gate
-
-Do not call the system finished until all applicable checks pass:
-
-- the real goal and deliverable are represented;
-- capability gaps are addressed;
-- selected skills are useful, compatible, and non-redundant;
-- external skills passed provenance/security review when applicable;
-- agent topology is justified and handoffs are bounded;
-- context strategy is proportionate;
-- tool/skill/plugin states are factual rather than invented;
-- failure handling is sufficient;
-- deliverables and non-counting outcomes are explicit where needed;
-- definition of done is observable;
-- completion claims require evidence;
-- adversarial review found no unresolved material defect.
-
-For maintenance or regression testing of this skill itself, use [self-benchmark.md](references/self-benchmark.md).
+For regression testing or maintenance of Omega itself, use [self-benchmark.md](references/self-benchmark.md).

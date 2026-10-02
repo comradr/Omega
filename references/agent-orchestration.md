@@ -72,6 +72,8 @@ Use only the useful subset:
 - **Implementation Specialist:** owns a separable implementation component.
 - **Prompt Red Team:** attacks ambiguity, loopholes, and false-completion paths in a fresh context.
 - **QA Evaluator:** checks evidence against completion criteria.
+- **Blind Comparator:** compares candidate outputs without knowing which architecture produced them; use only for meaningful A/B evaluation.
+- **Grader:** applies a defined rubric/evidence standard when deterministic checks cannot decide important quality dimensions.
 
 ## 5. Parallelism rules
 

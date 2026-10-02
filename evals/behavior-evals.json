@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "cases": [
+    {
+      "id": "direct",
+      "expected": [
+        "direct routing",
+        "no external skill search without gap",
+        "brief verification"
+      ]
+    },
+    {
+      "id": "complex-software",
+      "expected": [
+        "must-preserve requirements",
+        "capability map",
+        "regression evidence",
+        "task-skill decision",
+        "bounded QA"
+      ]
+    },
+    {
+      "id": "untrusted-input",
+      "expected": [
+        "explicit instruction/data boundary when relevant"
+      ]
+    },
+    {
+      "id": "correction-delta",
+      "expected": [
+        "update affected architecture only",
+        "invalidate stale state",
+        "avoid full redesign"
+      ]
+    },
+    {
+      "id": "skill-state",
+      "expected": [
+        "discovered/reviewed not represented as installed or invoked"
+      ]
+    },
+    {
+      "id": "multi-agent-trap",
+      "expected": [
+        "no agents when coordination adds no material value"
+      ]
+    },
+    {
+      "id": "long-horizon",
+      "expected": [
+        "success predicate",
+        "non-counting outcomes",
+        "durable state when useful",
+        "independent verification"
+      ]
+    },
+    {
+      "id": "runtime-mismatch",
+      "expected": [
+        "capability-based fallback",
+        "no invented runtime features"
+      ]
+    },
+    {
+      "id": "roi",
+      "expected": [
+        "extra architecture must have identifiable execution benefit"
+      ]
+    }
+  ]
+}

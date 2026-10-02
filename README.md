@@ -41,4 +41,4 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current repository baseline: production-candidate architecture. The next development track adds empirical A/B evaluation, trigger evaluation, runtime adaptation, behavior mining, trust boundaries, and stronger overhead/ROI controls.
+Main remains the 0.9.0 baseline while `omega-1.0` contains `1.0.0-rc2`. The candidate adds adaptive complexity routing, lower core overhead, architecture-state caching, runtime adaptation, trust boundaries, behavior mining, empirical-evaluation protocols, and automated CI. GitHub is the source of truth; package with `python scripts/package_skill.py .` to produce the installable skill bundle.

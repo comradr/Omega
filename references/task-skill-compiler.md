@@ -30,6 +30,10 @@ When OpenAI agent metadata is used, default_prompt should explicitly reference t
 
 Do not invent icons, colors, dependencies, or runtime capabilities. Do not vendor entire third-party skills into a generated task skill.
 
+## Runtime creator preference
+
+If the target environment provides an official or built-in skill creator, use it for creating or repairing the actual skill package when doing so improves compatibility. Keep Omega's own requirements/source hierarchy authoritative, then run the deterministic validation/package checks available in the target environment.
+
 ## Validation
 
 Check:
