@@ -1,0 +1,55 @@
+{
+  "version": "1.0",
+  "cases": [
+    {
+      "id": "t1",
+      "expect": "trigger",
+      "query": "Сделай полноценный промпт для Work, который сам решит какие скиллы и субагенты нужны для аудита моего Android проекта."
+    },
+    {
+      "id": "t2",
+      "expect": "trigger",
+      "query": "Improve this system prompt and design a reusable agent workflow with tools, skills and verification."
+    },
+    {
+      "id": "t3",
+      "expect": "trigger",
+      "query": "Собери из этого повторяемый task skill, чтобы я мог использовать его в других чатах."
+    },
+    {
+      "id": "t4",
+      "expect": "trigger",
+      "query": "Проверь мой промпт: он жрёт слишком много контекста и агенты дублируют друг друга."
+    },
+    {
+      "id": "n1",
+      "expect": "no-trigger",
+      "query": "Переведи это предложение на английский."
+    },
+    {
+      "id": "n2",
+      "expect": "no-trigger",
+      "query": "Найди ошибку в этой функции Python."
+    },
+    {
+      "id": "n3",
+      "expect": "no-trigger",
+      "query": "Какая погода завтра?"
+    },
+    {
+      "id": "n4",
+      "expect": "no-trigger",
+      "query": "Сделай эту фотографию менее яркой."
+    },
+    {
+      "id": "b1",
+      "expect": "trigger",
+      "query": "Мне нужен промт инжинер: я скажу цель, а он сам соберет нормальную систему выполнения."
+    },
+    {
+      "id": "b2",
+      "expect": "no-trigger",
+      "query": "Выполни уже готовое ТЗ из файла; новый промпт мне не нужен."
+    }
+  ]
+}
