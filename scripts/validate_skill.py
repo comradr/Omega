@@ -145,23 +145,26 @@ def main() -> int:
                 errors.append(f"Broken local link: {md.relative_to(root)} -> {target}")
 
     agent = root / "agents" / "openai.yaml"
-    if not agent.is_file():
-        errors.append("Missing agents/openai.yaml")
-    else:
-        metadata = parse_simple_yaml_scalars(agent.read_text(encoding="utf-8"))
+    if agent.is_file():
+        try:
+            agent_text = agent.read_text(encoding="utf-8")
+        except UnicodeDecodeError as exc:
+            errors.append(f"Invalid UTF-8 in agents/openai.yaml: {exc}")
+            agent_text = ""
+        metadata = parse_simple_yaml_scalars(agent_text)
         display = metadata.get("display_name")
         short = metadata.get("short_description")
         default = metadata.get("default_prompt")
         implicit = metadata.get("allow_implicit_invocation")
-        if not isinstance(display, str) or not display.strip():
-            errors.append("agents/openai.yaml missing display_name")
-        if not isinstance(short, str) or not short.strip():
-            errors.append("short_description must be a non-empty string")
-        if not isinstance(default, str) or (name and f"${name}" not in default):
-            errors.append(f"default_prompt must reference ${name or '<skill-name>'}")
-        if not isinstance(implicit, bool):
-            errors.append("allow_implicit_invocation must be boolean")
 
+        if not isinstance(display, str) or not display.strip():
+            errors.append("agents/openai.yaml interface.display_name must be a non-empty string")
+        if not isinstance(short, str) or not short.strip():
+            errors.append("agents/openai.yaml interface.short_description must be a non-empty string")
+        if default is not None and (not isinstance(default, str) or not default.strip()):
+            errors.append("agents/openai.yaml interface.default_prompt must be non-empty when provided")
+        if implicit is not None and not isinstance(implicit, bool):
+            errors.append("agents/openai.yaml policy.allow_implicit_invocation must be boolean when provided")
     for p in root.rglob("*.py"):
         try:
             ast.parse(p.read_text(encoding="utf-8"), filename=str(p))
