@@ -20,6 +20,8 @@ jobs:
         run: python scripts/validate_skill.py .
       - name: Static architecture evals
         run: python scripts/run_static_evals.py .
+      - name: Validator regression suite
+        run: python scripts/test_validator.py
       - name: Scaffolder hostile-input regression
         run: python scripts/test_scaffolder.py
       - name: Compile Python
