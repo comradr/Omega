@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current stable release on `main`: `1.0.2`. Branch `omega-1.0.3-final-audit` is the final-audit candidate. It keeps the compact runtime architecture, removes an unsupported default-prompt convention, and adds an executable blind A/B / trigger-evaluation harness. Model-execution superiority is not claimed until actual comparable runs are supplied.
+Current stable release: `1.0.3`. It keeps the compact runtime architecture, removes unsupported default-prompt conventions, adds executable blind A/B and trigger-evaluation tooling, and ships both canonical Skill ZIP and generated skills-only Plugin ZIP distribution paths. Model-execution superiority is intentionally not claimed until actual comparable runs are supplied.
 
 
 ## Installation paths
