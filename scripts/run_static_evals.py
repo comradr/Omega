@@ -113,12 +113,15 @@ def main() -> int:
         if not (root / rel).is_file():
             errors.append(f"empirical harness file missing: {rel}")
 
-    for rel in (
-        "scripts/package_plugin.py",
-        "scripts/test_plugin_package.py",
-    ):
-        if not (root / rel).is_file():
-            errors.append(f"plugin wrapper file missing: {rel}")
+    # Distribution tooling is repository-only and intentionally excluded from
+    # the installable skill bundle. Gate it only when evaluating the source repo.
+    if (root / "VERSION").is_file():
+        for rel in (
+            "scripts/package_plugin.py",
+            "scripts/test_plugin_package.py",
+        ):
+            if not (root / rel).is_file():
+                errors.append(f"plugin wrapper file missing: {rel}")
 
     routing = (root / "references" / "overhead-and-routing.md").read_text(encoding="utf-8").lower()
     for phrase in ("no skill search", "no skill search, task skill, or agents", "skip it"):
