@@ -86,6 +86,23 @@ def main() -> int:
         if not case.get("must") or not isinstance(case.get("must_not"), list):
             errors.append(f"benchmark case {case.get('id')} lacks must/must_not contract")
 
+    # Omega-specific agent metadata is a project invariant, not a universal skill requirement.
+    agent_path = root / "agents" / "openai.yaml"
+    if not agent_path.is_file():
+        errors.append("Omega must include agents/openai.yaml")
+    else:
+        agent_text = agent_path.read_text(encoding="utf-8")
+        for expected in (
+            "interface:",
+            "display_name:",
+            "short_description:",
+            "default_prompt:",
+            "policy:",
+            "allow_implicit_invocation: true",
+            "$prompt-architect-omega",
+        ):
+            if expected not in agent_text:
+                errors.append(f"Omega agents/openai.yaml missing expected metadata: {expected}")
     routing = (root / "references" / "overhead-and-routing.md").read_text(encoding="utf-8").lower()
     for phrase in ("no skill search", "no skill search, task skill, or agents", "skip it"):
         if phrase in routing:

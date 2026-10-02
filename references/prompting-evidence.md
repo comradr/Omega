@@ -52,3 +52,13 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Do not assume:** shorter is always better if it removes the trigger boundary; preserve representative positive and negative cases.
 - **Last verified:** 2026-10-02.
 - **Sources:** OpenAI Developers “Skills”, “Build skills”, and “Rethinking skills and prompts for GPT-6 Astra”.
+
+
+### Optional OpenAI agent metadata
+
+- **Evidence class:** official OpenAI Developers submission-validation documentation.
+- **Last verified:** 2026-10-02.
+- **Observed behavior:** a skill may include `agents/openai.yaml`; if the file is included, `interface.display_name` and `interface.short_description` are required.
+- **Optional fields:** `interface.default_prompt`, `policy`, and `policy.allow_implicit_invocation` are optional.
+- **Architectural implication:** Omega's generic validator must not impose Omega-specific agent metadata on every generated task skill. Omega-specific expectations belong in Omega's own regression suite.
+- **Sources:** OpenAI Developers “Plugin submission errors” and “Build skills”.

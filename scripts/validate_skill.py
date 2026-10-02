@@ -41,26 +41,62 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
         fields[key] = value
     return fields, text[end + 5 :]
 
-def parse_simple_yaml_scalars(text: str) -> dict[str, object]:
-    out: dict[str, object] = {}
-    for raw in text.splitlines():
-        if not raw.strip() or raw.lstrip().startswith("#") or ":" not in raw:
+def parse_scalar(value: str) -> object:
+    value = value.strip()
+    if value in {"true", "false"}:
+        return value == "true"
+    if value.startswith('"'):
+        try:
+            return json.loads(value)
+        except json.JSONDecodeError as exc:
+            raise ValueError("Malformed quoted YAML scalar") from exc
+    return value
+
+
+def parse_agent_metadata(text: str) -> dict[str, dict[str, object]]:
+    """Parse the small subset of agents/openai.yaml needed by this validator.
+
+    This intentionally validates section structure without adding a PyYAML runtime
+    dependency to every generated skill.
+    """
+    sections: dict[str, dict[str, object]] = {}
+    current: str | None = None
+    for lineno, raw in enumerate(text.splitlines(), start=1):
+        if not raw.strip() or raw.lstrip().startswith("#"):
             continue
-        key, value = raw.strip().split(":", 1)
-        value = value.strip()
-        if not value:
+        leading = raw[: len(raw) - len(raw.lstrip())]
+        if "\t" in leading:
+            raise ValueError(f"Tabs are not supported in agents/openai.yaml indentation on line {lineno}")
+        indent = len(leading)
+        stripped = raw.strip()
+        if indent == 0:
+            if ":" not in stripped:
+                raise ValueError(f"Expected top-level mapping key on line {lineno}")
+            key, value = stripped.split(":", 1)
+            current = key.strip()
+            if not current:
+                raise ValueError(f"Empty top-level key on line {lineno}")
+            sections.setdefault(current, {})
+            if value.strip():
+                # Valid YAML also permits inline mappings. Without a YAML dependency,
+                # record the value and let the platform perform full schema validation.
+                sections[current]["__inline__"] = value.strip()
             continue
-        if value in {"true", "false"}:
-            parsed: object = value == "true"
-        elif value.startswith('"'):
-            try:
-                parsed = json.loads(value)
-            except json.JSONDecodeError:
-                parsed = value.strip('"')
-        else:
-            parsed = value
-        out[key] = parsed
-    return out
+        if current is None:
+            raise ValueError(f"Nested value before top-level section on line {lineno}")
+        if ":" not in stripped:
+            raise ValueError(f"Malformed mapping entry on line {lineno}")
+        key, value = stripped.split(":", 1)
+        key = key.strip()
+        if not key:
+            raise ValueError(f"Empty mapping key on line {lineno}")
+        if not value.strip():
+            # Nested mappings such as dependencies.tools are outside the fields
+            # this lightweight validator needs; keep the key as a marker.
+            sections[current][key] = {}
+            continue
+        sections[current][key] = parse_scalar(value)
+    return sections
 
 def resolve_markdown_link(source: Path, target: str, root: Path) -> Path | None:
     target = target.strip()
@@ -144,24 +180,44 @@ def main() -> int:
             if not resolved.exists():
                 errors.append(f"Broken local link: {md.relative_to(root)} -> {target}")
 
+    # agents/openai.yaml is optional in the OpenAI skill format.
+    # If present, its interface mapping has required display metadata; default_prompt
+    # and policy fields remain optional.
     agent = root / "agents" / "openai.yaml"
-    if not agent.is_file():
-        errors.append("Missing agents/openai.yaml")
-    else:
-        metadata = parse_simple_yaml_scalars(agent.read_text(encoding="utf-8"))
-        display = metadata.get("display_name")
-        short = metadata.get("short_description")
-        default = metadata.get("default_prompt")
-        implicit = metadata.get("allow_implicit_invocation")
-        if not isinstance(display, str) or not display.strip():
-            errors.append("agents/openai.yaml missing display_name")
-        if not isinstance(short, str) or not short.strip():
-            errors.append("short_description must be a non-empty string")
-        if not isinstance(default, str) or (name and f"${name}" not in default):
-            errors.append(f"default_prompt must reference ${name or '<skill-name>'}")
-        if not isinstance(implicit, bool):
-            errors.append("allow_implicit_invocation must be boolean")
+    if agent.is_file():
+        try:
+            agent_text = agent.read_text(encoding="utf-8")
+            sections = parse_agent_metadata(agent_text)
+        except (UnicodeDecodeError, ValueError) as exc:
+            errors.append(f"Invalid agents/openai.yaml: {exc}")
+            sections = {}
 
+        interface = sections.get("interface")
+        if not isinstance(interface, dict):
+            errors.append("agents/openai.yaml must contain an interface mapping")
+        elif "__inline__" in interface:
+            warnings.append("agents/openai.yaml uses inline interface YAML; deep field validation deferred to platform")
+        else:
+            display = interface.get("display_name")
+            short = interface.get("short_description")
+            default = interface.get("default_prompt")
+            if not isinstance(display, str) or not display.strip():
+                errors.append("agents/openai.yaml interface.display_name must be a non-empty string")
+            if not isinstance(short, str) or not short.strip():
+                errors.append("agents/openai.yaml interface.short_description must be a non-empty string")
+            if default is not None and (not isinstance(default, str) or not default.strip()):
+                errors.append("agents/openai.yaml interface.default_prompt must be non-empty when provided")
+
+        policy = sections.get("policy")
+        if policy is not None:
+            if not isinstance(policy, dict):
+                errors.append("agents/openai.yaml policy must be a mapping when provided")
+            elif "__inline__" in policy:
+                warnings.append("agents/openai.yaml uses inline policy YAML; deep field validation deferred to platform")
+            else:
+                implicit = policy.get("allow_implicit_invocation")
+                if implicit is not None and not isinstance(implicit, bool):
+                    errors.append("agents/openai.yaml policy.allow_implicit_invocation must be boolean when provided")
     for p in root.rglob("*.py"):
         try:
             ast.parse(p.read_text(encoding="utf-8"), filename=str(p))
