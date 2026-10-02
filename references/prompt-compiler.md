@@ -8,6 +8,8 @@ A prompt is an execution contract, not a transcript of the design discussion.
 
 Compile only instructions that materially alter execution. Let skills and references carry reusable procedures when the environment supports them.
 
+When choosing mechanisms such as examples, decomposition, structured output, context isolation, or independent alternatives, use [technique-selector.md](technique-selector.md) rather than importing a named prompt-framework stack.
+
 A reusable output skeleton is available at [master-prompt-skeleton.md](../assets/master-prompt-skeleton.md). Copy/adapt it only when a file/template is useful; do not load it for trivial prompts.
 
 ## 1. Write the success predicate first
