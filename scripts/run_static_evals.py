@@ -23,8 +23,11 @@ def main() -> int:
 
     skill = (root / "SKILL.md").read_text(encoding="utf-8")
     core_lines = len(skill.splitlines())
-    if core_lines > 220:
-        errors.append(f"SKILL.md core grew to {core_lines} lines (>220 overhead guard)")
+    core_chars = len(skill)
+    if core_lines > 120:
+        errors.append(f"SKILL.md core grew to {core_lines} lines (>120 overhead guard)")
+    if core_chars > 8000:
+        errors.append(f"SKILL.md core grew to {core_chars} characters (>8000 overhead guard)")
 
     refs = "\n".join(p.read_text(encoding="utf-8").lower() for p in (root / "references").glob("*.md"))
     combined = skill.lower() + "\n" + refs
