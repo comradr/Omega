@@ -9,6 +9,7 @@
 - Adds executable blind A/B preparation and aggregation tools plus trigger dev/holdout scoring.
 - Adds a regression-tested empirical evaluation runbook without fabricating model outputs or token counts.
 - Adds CI coverage for the evaluation harness and removes the stale `omega-1.0` push branch from the workflow.
+- Supports the documented Agent Skills optional frontmatter fields (`license`, `compatibility`, `metadata`, and experimental `allowed-tools`) in the generic validator.
 
 ## 1.0.2 — Standards-aligned generic validator
 
