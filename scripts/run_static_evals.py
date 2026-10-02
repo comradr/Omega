@@ -58,8 +58,8 @@ def main() -> int:
     behavior = json.loads((root / "evals" / "behavior-evals.json").read_text(encoding="utf-8"))
     trigger_cases = trigger.get("cases", [])
     behavior_cases = behavior.get("cases", [])
-    if len(trigger_cases) < 16:
-        errors.append("trigger eval set must contain at least 16 cases")
+    if len(trigger_cases) < 18:
+        errors.append("trigger eval set must contain at least 18 cases")
     if not any(c.get("expect") == "trigger" for c in trigger_cases):
         errors.append("trigger eval set has no positive cases")
     if not any(c.get("expect") == "no-trigger" for c in trigger_cases):
