@@ -65,6 +65,76 @@ def main() -> int:
     finally:
         td.cleanup()
 
+    # Agent Skills optional frontmatter fields are accepted and type-checked.
+    td, root = new_root("omega-validator-optional-frontmatter-")
+    try:
+        (root / "SKILL.md").write_text(
+            """---
+name: validator-case
+description: Test optional Agent Skills frontmatter.
+license: MIT
+compatibility: >
+  Requires a runtime with repository access.
+metadata:
+  author: OpenAI-compatible test
+  version: "1.0"
+allowed-tools: Read Write
+---
+
+Do the task.
+""",
+            encoding="utf-8",
+        )
+        run(root, True)
+    finally:
+        td.cleanup()
+
+    td, root = new_root("omega-validator-bad-metadata-")
+    try:
+        (root / "SKILL.md").write_text(
+            """---
+name: validator-case
+description: Test invalid metadata.
+metadata:
+  attempts: 3
+---
+
+Do the task.
+""",
+            encoding="utf-8",
+        )
+        run(root, False)
+    finally:
+        td.cleanup()
+
+    td, root = new_root("omega-validator-bad-compatibility-")
+    try:
+        long_value = "x" * 501
+        (root / "SKILL.md").write_text(
+            f"---\nname: validator-case\ndescription: Test compatibility.\ncompatibility: {long_value}\n---\n\nDo the task.\n",
+            encoding="utf-8",
+        )
+        run(root, False)
+    finally:
+        td.cleanup()
+
+    td, root = new_root("omega-validator-unknown-frontmatter-")
+    try:
+        (root / "SKILL.md").write_text(
+            """---
+name: validator-case
+description: Test unknown field.
+imaginary-field: nope
+---
+
+Do the task.
+""",
+            encoding="utf-8",
+        )
+        run(root, False)
+    finally:
+        td.cleanup()
+
     # agents/openai.yaml is valid with only required interface fields.
     td, root = new_root("omega-validator-min-agent-")
     try:
