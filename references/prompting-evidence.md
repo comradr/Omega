@@ -62,3 +62,21 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Optional fields:** `interface.default_prompt`, `policy`, and `policy.allow_implicit_invocation` are optional.
 - **Architectural implication:** Omega's generic validator must not impose Omega-specific agent metadata on every generated task skill. Omega-specific expectations belong in Omega's own regression suite.
 - **Sources:** OpenAI Developers “Plugin submission errors” and “Build skills”.
+
+
+### Default prompt semantics
+
+- **Evidence class:** official OpenAI Developers examples and validation reference.
+- **Last verified:** 2026-10-02.
+- **Observed behavior:** `interface.default_prompt` is an optional ordinary string when `agents/openai.yaml` is present.
+- **Do not assume:** a dollar-prefixed skill name such as `$skill-name` is required or substituted by ChatGPT. Current OpenAI examples use normal user-facing prompt text.
+- **Architectural implication:** Omega and generated task skills use natural starter text unless a target runtime explicitly documents invocation syntax.
+- **Sources:** OpenAI Developers “Build skills” and “Plugin submission errors”.
+
+### Direct OpenAI skill ZIP
+
+- **Evidence class:** official OpenAI API Skills documentation.
+- **Last verified:** 2026-10-02.
+- **Observed behavior:** a skill can be uploaded as a ZIP containing a single top-level folder with one `SKILL.md`; current limits are 50 MB compressed, 500 files, and 25 MB per uncompressed file.
+- **Architectural implication:** `prompt-architect-omega.zip` is the canonical OpenAI-targeted bundle. A `.skill` compatibility copy must not be described as universally supported by ChatGPT unless the target surface documents that extension.
+- **Source:** OpenAI API “Skills”.
