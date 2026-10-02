@@ -117,6 +117,12 @@ The harness never fabricates model outputs or token counts.
 
 The scaffolder now validates names/descriptions before writing, supports optional agent metadata, validates generated output automatically when the validator is available, and has regression coverage for hostile YAML-sensitive input.
 
+### 6. Generic frontmatter validation was too narrow
+
+Earlier validation accepted only `name` and `description`. The Agent Skills specification also permits optional `license`, `compatibility`, `metadata`, and experimental `allowed-tools`.
+
+1.0.3 expands the dependency-free preflight parser and adds regression tests for valid optional fields, metadata type errors, overlong compatibility text, and unknown frontmatter.
+
 ## Token/context overhead
 
 The always-on skill discovery description remains deliberately small. The root `SKILL.md` is a router; detailed behavior lives in references loaded only when needed.
@@ -149,6 +155,7 @@ Verified against current OpenAI documentation on 2026-10-02:
 - Current documented direct-skill limits include 50 MB compressed ZIP, 500 files, and 25 MB per uncompressed file.
 - `agents/openai.yaml` is optional; if included, its interface requires display name and short description.
 - `default_prompt` is optional ordinary prompt text.
+- Agent Skills frontmatter supports optional `license`, `compatibility`, `metadata`, and experimental `allowed-tools` in addition to required `name` and `description`.
 - Native Skills in ChatGPT are currently documented for eligible Business, Enterprise, Healthcare, and Edu accounts.
 - ChatGPT Work is available on eligible Plus plans, so the GitHub/bootstrap path remains relevant for Plus users without native Skills.
 
