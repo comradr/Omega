@@ -9,7 +9,7 @@ import zipfile
 from pathlib import Path
 
 RUNTIME_DIRS = {"agents", "assets", "references", "scripts", "evals"}
-EXCLUDED_NAMES = {"test_scaffolder.py", "test_validator.py", "run_ci_checks.py"}
+EXCLUDED_NAMES = {"test_scaffolder.py", "test_validator.py", "test_eval_harness.py", "run_ci_checks.py"}
 EXCLUDED_SUFFIXES = {".zip", ".skill"}
 MAX_FILES = 500
 MAX_FILE_BYTES = 25 * 1024 * 1024
