@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0 — First stable architecture
+
+- Promotes RC3 after green deterministic validation and GitHub CI.
+- Keeps the discovery description at 282 characters and the runtime core at 6,679 characters.
+- Preserves progressive disclosure, hidden complexity routing, architectural-overhead controls, runtime adaptation, trust boundaries, durable state, task-skill compilation, agent orchestration, and evidence-based completion.
+- Includes 18 trigger cases with dev/holdout boundaries, 9 behavior contracts, and a 12-case architecture benchmark corpus.
+- Model-execution baseline-vs-Omega A/B remains explicitly unclaimed until a repeatable independent runner is available.
+
 ## 1.0.0-rc3 — Lower always-on discovery overhead
 
 - Reduced the discovery description from 789 to 282 characters while preserving the trigger boundary.
