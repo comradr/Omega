@@ -91,3 +91,10 @@ Current OpenAI documentation verified on 2026-10-02 specifies:
 - maximum 25 MB uncompressed size per file.
 
 The hardening validator/package pipeline now checks those limits before release, while keeping the existing smaller internal progressive-disclosure guards as Omega-specific quality checks rather than claiming they are OpenAI platform limits.
+
+
+### 1.0.1 promotion record
+
+The 1.0.1 hardening pull request passed the complete GitHub validation workflow. The generated Actions artifact was downloaded independently, both bundled files were inspected, the inner skill ZIP contained a single `prompt-architect-omega/` root with 29 packaged files, and the extracted bundle passed validator, static architecture evals, and Python compilation again.
+
+The 1.0.1 change set does not modify `SKILL.md`, trigger datasets, or runtime reference behavior relative to stable 1.0.0; it hardens validation, packaging, and release evidence only.
