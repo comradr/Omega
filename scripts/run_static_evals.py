@@ -99,10 +99,11 @@ def main() -> int:
             "default_prompt:",
             "policy:",
             "allow_implicit_invocation: true",
-            "$prompt-architect-omega",
         ):
             if expected not in agent_text:
                 errors.append(f"Omega agents/openai.yaml missing expected metadata: {expected}")
+        if "$prompt-architect-omega" in agent_text:
+            errors.append("Omega default_prompt must not contain invented dollar-style skill invocation")
     routing = (root / "references" / "overhead-and-routing.md").read_text(encoding="utf-8").lower()
     for phrase in ("no skill search", "no skill search, task skill, or agents", "skip it"):
         if phrase in routing:
