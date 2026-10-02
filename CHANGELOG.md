@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.2 — Standards-aligned generic validator
+
+- Leaves Omega runtime/discovery behavior unchanged.
+- Makes `agents/openai.yaml` optional in the generic skill validator, matching current OpenAI skill metadata semantics.
+- When agent metadata is present, validates the required `interface.display_name` and `interface.short_description` fields while keeping `default_prompt` and policy fields optional.
+- Moves Omega's own stronger agent-metadata expectations into Omega-specific static regression checks.
+- Expands validator regression tests to cover valid skills with no agent metadata, minimal optional agent metadata, full Omega-style metadata, malformed agent metadata, empty skill bodies, and duplicate manifests.
+- Adds the validator regression suite to GitHub Actions so these tests are actually enforced on pull requests.
+
 ## 1.0.1 — Packaging and validation hardening
 
 - Leaves the stable 1.0 runtime/discovery behavior unchanged.
