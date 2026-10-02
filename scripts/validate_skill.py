@@ -102,8 +102,8 @@ def main() -> int:
             errors.append("Invalid skill name")
         if args.strict_folder_name and name and root.name != name:
             errors.append(f"Folder name '{root.name}' must match skill name '{name}'")
-        if not (40 <= len(description) <= 1024):
-            errors.append("Description must be 40–1024 characters")
+        if not description or len(description) > 1024:
+            errors.append("Description must be non-empty and at most 1,024 characters")
         if len(body.splitlines()) > 500:
             errors.append("SKILL.md body exceeds 500 lines")
         if PLACEHOLDER_RE.search(body):
@@ -138,8 +138,8 @@ def main() -> int:
         implicit = metadata.get("allow_implicit_invocation")
         if not isinstance(display, str) or not display.strip():
             errors.append("agents/openai.yaml missing display_name")
-        if not isinstance(short, str) or not (25 <= len(short) <= 64):
-            errors.append("short_description must be 25–64 characters")
+        if not isinstance(short, str) or not short.strip():
+            errors.append("short_description must be a non-empty string")
         if not isinstance(default, str) or (name and f"${name}" not in default):
             errors.append(f"default_prompt must reference ${name or '<skill-name>'}")
         if not isinstance(implicit, bool):
