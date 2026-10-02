@@ -1,18 +1,18 @@
-# Omega 1.0 Release-Candidate Validation
+# Omega 1.0 Validation
 
 Date: 2026-10-02
 
 ## Purpose
 
-This report records what has actually been verified for the Omega 1.0 release candidate and what remains unverified.
+This report records what has actually been verified for Omega 1.0 and what remains intentionally unclaimed.
 
 ## Baseline versus candidate core
 
 The 0.9.0 `SKILL.md` baseline contains 9,207 characters, 139 lines, and 1,175 whitespace-delimited words.
 
-The compact 1.0 candidate core contains 7,186 characters, 92 lines, and 857 whitespace-delimited words.
+The RC2 compact core contains 7,186 characters and 857 whitespace-delimited words. RC3 reduces the same core to 6,679 characters and 788 whitespace-delimited words, with no workflow capability removed.
 
-The skill description used for discovery remains unchanged from the baseline. New 1.0 mechanisms live primarily in conditionally referenced supporting files, so added capability does not require expanding the discovery metadata.
+The discovery description is reduced from 789 characters in RC2 to 282 characters in RC3. This matters because OpenAI skill discovery exposes name/description metadata before full skill instructions are loaded. A CI guard now fails if the discovery description grows beyond 350 characters.
 
 These are structural size measurements, not claimed model token counts.
 
@@ -29,7 +29,9 @@ These are structural size measurements, not claimed model token counts.
 - behavior mining from repeated real corrections;
 - prompting evidence ledger;
 - empirical evaluation protocol;
-- trigger, behavior, and benchmark regression corpora.
+- trigger, behavior, and benchmark regression corpora;
+- dev/holdout trigger evaluation with explicit positive and negative boundary cases;
+- always-on discovery-description overhead guard.
 
 ## Local deterministic checks
 
@@ -63,10 +65,14 @@ A true differential benchmark requires running the same held-out tasks through b
 
 ## Release rule
 
-Do not label the candidate final merely because files validate. Final promotion should require:
+Stable 1.0 promotion requires:
 
 1. green local checks;
 2. green GitHub CI on the release commit;
 3. no unresolved material red-team defect;
 4. package contents inspected and installable;
 5. model-execution A/B evidence when a repeatable runner is available, or an explicit release note that this evidence is still pending.
+
+## Stable 1.0 promotion record
+
+Version `1.0.0` is promoted after the RC3 branch passed the repository validation workflow and the final red-team pass found no unresolved material architecture defect. The release still does not claim a measured model-execution quality win over 0.9; that claim requires the independent differential benchmark described above.

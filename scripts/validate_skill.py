@@ -168,9 +168,12 @@ def main() -> int:
                 errors.append(f"{p.relative_to(root)} contains missing/duplicate case ids")
             if p.name == "trigger-evals.json":
                 valid = {"trigger", "no-trigger"}
+                valid_splits = {"dev", "holdout"}
                 for case in cases:
                     if case.get("expect") not in valid:
                         errors.append(f"{p.relative_to(root)} case {case.get('id')} has invalid expect")
+                    if case.get("split") not in valid_splits:
+                        errors.append(f"{p.relative_to(root)} case {case.get('id')} has invalid split")
                     if not isinstance(case.get("query"), str) or not case["query"].strip():
                         errors.append(f"{p.relative_to(root)} case {case.get('id')} has empty query")
 

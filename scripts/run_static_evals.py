@@ -22,6 +22,16 @@ def main() -> int:
             errors.append(f"missing {label}: {name}")
 
     skill = (root / "SKILL.md").read_text(encoding="utf-8")
+    description_line = next(
+        (line for line in skill.splitlines() if line.startswith("description:")),
+        "",
+    )
+    discovery_description = description_line.split(":", 1)[1].strip() if ":" in description_line else ""
+    if len(discovery_description) > 350:
+        errors.append(
+            f"skill discovery description grew to {len(discovery_description)} characters (>350 always-on overhead guard)"
+        )
+
     core_lines = len(skill.splitlines())
     core_chars = len(skill)
     if core_lines > 120:
@@ -48,12 +58,20 @@ def main() -> int:
     behavior = json.loads((root / "evals" / "behavior-evals.json").read_text(encoding="utf-8"))
     trigger_cases = trigger.get("cases", [])
     behavior_cases = behavior.get("cases", [])
-    if len(trigger_cases) < 10:
-        errors.append("trigger eval set must contain at least 10 cases")
+    if len(trigger_cases) < 18:
+        errors.append("trigger eval set must contain at least 18 cases")
     if not any(c.get("expect") == "trigger" for c in trigger_cases):
         errors.append("trigger eval set has no positive cases")
     if not any(c.get("expect") == "no-trigger" for c in trigger_cases):
         errors.append("trigger eval set has no negative cases")
+    splits = {c.get("split") for c in trigger_cases}
+    if not {"dev", "holdout"}.issubset(splits):
+        errors.append("trigger eval set must contain both dev and holdout cases")
+    holdout = [c for c in trigger_cases if c.get("split") == "holdout"]
+    if not any(c.get("expect") == "trigger" for c in holdout):
+        errors.append("holdout trigger eval set has no positive case")
+    if not any(c.get("expect") == "no-trigger" for c in holdout):
+        errors.append("holdout trigger eval set has no negative case")
     if len(behavior_cases) < 9:
         errors.append("behavior eval set must contain at least 9 cases")
 

@@ -42,3 +42,13 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Applies when:** external or shared skill bundles are introduced.
 - **Do not assume:** a skill is safe because its instructions look harmless; scripts and tool access are part of the trust surface.
 - **Last verified:** 2026-10-02.
+
+### Compact discovery descriptions
+
+- **Technique:** keep the skill description short while still naming the user goals and trigger boundary.
+- **Evidence class:** official OpenAI documentation and current OpenAI developer guidance.
+- **Applies when:** a skill is discoverable automatically and its metadata is added to model context before invocation.
+- **Observed behavior:** name and description are primary discovery signals; overly long or overlapping descriptions add always-on context and can make skill selection less reliable.
+- **Do not assume:** shorter is always better if it removes the trigger boundary; preserve representative positive and negative cases.
+- **Last verified:** 2026-10-02.
+- **Sources:** OpenAI Developers “Skills”, “Build skills”, and “Rethinking skills and prompts for GPT-6 Astra”.
