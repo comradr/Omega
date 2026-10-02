@@ -26,11 +26,15 @@ jobs:
         run: python -m compileall -q scripts
       - name: Package and revalidate archives
         run: python scripts/package_skill.py .
+      - name: Stage installable skill bundles
+        run: |
+          cp ../prompt-architect-omega.zip ./prompt-architect-omega.zip
+          cp ../prompt-architect-omega.skill ./prompt-architect-omega.skill
       - name: Upload installable skill bundles
         uses: actions/upload-artifact@v4
         with:
           name: prompt-architect-omega-${{ github.sha }}
           path: |
-            ../prompt-architect-omega.zip
-            ../prompt-architect-omega.skill
+            prompt-architect-omega.zip
+            prompt-architect-omega.skill
           if-no-files-found: error
