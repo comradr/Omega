@@ -115,3 +115,20 @@ Version 1.0.2 fixes this separation:
 - the validator regression suite is now an explicit GitHub Actions step.
 
 This change affects validation/tooling only and does not alter Omega's runtime prompt-engineering behavior.
+
+
+### 1.0.2 promotion evidence
+
+Pull request validation for 1.0.2 completed successfully on GitHub Actions run `37062610955`.
+
+The generated Actions artifact was downloaded and inspected independently:
+
+- artifact id: `11250753476`;
+- artifact digest reported by GitHub: `sha256:dbe73faa2b0b4971810ae97076c76cabaeac215d59aa577f85cb8679e64e974d`;
+- inner `prompt-architect-omega.zip`: 39,317 bytes;
+- inner `prompt-architect-omega.skill`: 39,317 bytes;
+- both inner bundles have SHA-256 `ded3bde3beee365e98d3431a7f91a0bf934750cbe8cd2a196f1a0c71e21aec5d`;
+- both bundles contain one `prompt-architect-omega/` root and 29 packaged files;
+- the extracted ZIP passed strict folder-name validation, static architecture evals, and Python compilation.
+
+This evidence verifies the actual installable CI output, not only the repository source tree.
