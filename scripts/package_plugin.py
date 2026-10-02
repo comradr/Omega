@@ -116,6 +116,10 @@ def validate_plugin_archive(archive: Path, skill: str) -> None:
                 [sys.executable, str(validator), str(nested), "--strict-folder-name"],
                 check=True,
             )
+            subprocess.run(
+                [sys.executable, str(nested / "scripts" / "run_static_evals.py"), str(nested)],
+                check=True,
+            )
 
 def main() -> int:
     root = Path(sys.argv[1] if len(sys.argv) > 1 else ".").resolve()

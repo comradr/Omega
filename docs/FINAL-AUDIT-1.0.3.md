@@ -135,6 +135,14 @@ The release now supports:
 
 The wrapper is packaging/distribution only and does not alter Omega runtime instructions.
 
+### 7. Packaged static-eval false failure
+
+Independent inspection of a CI artifact found that the packaged skill's static evaluator still expected repository-only plugin-wrapper tooling. The skill itself was valid, but an installed copy could falsely report missing files.
+
+1.0.3 fixes the evaluator to distinguish repository mode from packaged-skill mode. The release pipeline was also strengthened: after packaging, both the canonical Skill ZIP and the skill nested inside the Plugin ZIP must run their own static evals successfully.
+
+This defect was found only by inspecting the actual release artifact, so artifact-level static evaluation is now a permanent release gate.
+
 ## Token/context overhead
 
 The always-on skill discovery description remains deliberately small. The root `SKILL.md` is a router; detailed behavior lives in references loaded only when needed.
