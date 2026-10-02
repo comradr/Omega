@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-`main` currently contains `1.0.0-rc2`; branch `omega-1.0-final` contains `1.0.0-rc3`. RC3 specifically reduces always-on discovery metadata and strengthens held-out trigger regression checks before final 1.0 promotion.
+Current stable release: `1.0.0`. It uses a compact discovery surface, progressive disclosure, adaptive Direct / Architect / System routing, architecture-state caching, runtime adaptation, trust boundaries, behavioral regression corpora, and automated CI. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
 
 
 ## Install / use
