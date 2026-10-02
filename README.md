@@ -59,3 +59,8 @@ python scripts/package_skill.py .
 4. In a separate prompt-engineering chat, describe the goal normally. Omega should decide the internal complexity path, relevant capabilities, whether skills/subagents/task-skill are justified, and return the smallest useful execution package.
 
 Do not paste the whole repository into every task chat. The installed skill should load detailed references only when needed.
+
+
+## Use in ChatGPT Work without native Skills
+
+If your ChatGPT surface does not expose native Skill upload/install, use the compatibility bootstrap in [docs/WORK-BOOTSTRAP.md](docs/WORK-BOOTSTRAP.md). It tells Work to read `SKILL.md` from this repository first and load only the references needed for the current task, preserving Omega's progressive-disclosure/token-overhead design.
