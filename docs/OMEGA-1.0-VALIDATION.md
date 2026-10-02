@@ -70,3 +70,21 @@ Do not label the candidate final merely because files validate. Final promotion 
 3. no unresolved material red-team defect;
 4. package contents inspected and installable;
 5. model-execution A/B evidence when a repeatable runner is available, or an explicit release note that this evidence is still pending.
+
+
+## RC3 standards alignment
+
+The generic validator was compared against current OpenAI Developers documentation on 2026-10-02. RC3 now distinguishes platform requirements from Omega-specific conventions.
+
+Platform-level checks include:
+
+- exactly one case-insensitive `SKILL.md` / `skill.md`;
+- non-empty `description` no longer than 1,024 characters;
+- non-empty instruction body;
+- maximum 500 files;
+- maximum 25 MB per uncompressed file;
+- maximum 50 MB compressed bundle during packaging.
+
+`agents/openai.yaml` is treated as optional. When present, the generic validator checks its required display and short-description metadata. Omega's own preferences, including its default prompt and implicit-invocation policy, are checked by Omega-specific regression tests instead of being imposed on every generated skill.
+
+This distinction prevents false validation failures on otherwise valid Agent Skills.
