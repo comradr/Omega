@@ -74,6 +74,19 @@ def main() -> int:
     finally:
         td.cleanup()
 
+    # Valid inline YAML should not be rejected by the lightweight preflight validator.
+    td, root = new_root("omega-validator-inline-agent-")
+    try:
+        write_skill(root)
+        (root / "agents").mkdir(parents=True, exist_ok=True)
+        (root / "agents" / "openai.yaml").write_text(
+            'interface: {display_name: "Inline Case", short_description: "Inline metadata"}\n',
+            encoding="utf-8",
+        )
+        run(root, True)
+    finally:
+        td.cleanup()
+
     # Omega-style optional fields are also valid.
     td, root = new_root("omega-validator-full-agent-")
     try:
