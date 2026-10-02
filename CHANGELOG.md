@@ -2,9 +2,9 @@
 
 ## 1.0.0-rc3 — Lower always-on discovery overhead
 
-- Reduced the discovery description from 789 to 302 characters while preserving the trigger boundary.
+- Reduced the discovery description from 789 to 282 characters while preserving the trigger boundary.
 - Added a 350-character CI guard so future edits cannot silently re-bloat always-on skill metadata.
-- Expanded trigger evaluation from 10 to 16 cases with separate dev and holdout sets.
+- Expanded trigger evaluation from 10 to 18 cases with separate dev and holdout sets.
 - Added explicit positive and negative holdout checks for prompt/workflow boundaries.
 - Recorded current OpenAI evidence for compact discovery descriptions.
 
