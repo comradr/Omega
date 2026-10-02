@@ -81,7 +81,7 @@ For substantial tasks, explicitly test whether specialist agents improve the res
 
 Every specialist must have a contract: role, bounded input, boundary, output, completion condition, and handoff format.
 
-For large repositories, long runs, repeated tool output, or multi-agent work, follow [context-and-resource-policy.md](references/context-and-resource-policy.md).
+For large repositories, long runs, repeated tool output, or multi-agent work, follow [context-and-resource-policy.md](references/context-and-resource-policy.md). For multi-session or frequently revised architectures, use [architecture-state.md](references/architecture-state.md) rather than re-deriving unchanged decisions.
 
 ### 6. Compile the master prompt
 
@@ -91,7 +91,7 @@ Build from the task model rather than expanding the user's wording. Follow [prom
 
 Use only sections that alter execution. Translate vague wishes into observable procedures. For long-running autonomous Work tasks, define exact success predicates, non-counting outcomes, verification gates, and return conditions when useful.
 
-### 7. Red-team, repair, and gate
+### 7. Evaluate when justified
 
 For maintenance of Omega itself, reusable task skills, or expensive architectures where regression risk justifies the overhead, use [empirical-evaluation.md](references/empirical-evaluation.md). Do not run empirical A/B machinery for ordinary prompt drafting.
 
@@ -99,13 +99,13 @@ When repeated real user corrections or failures are available, use [behavior-min
 
 Use [prompting-evidence.md](references/prompting-evidence.md) when a material design decision depends on runtime-specific prompting assumptions.
 
-### 7a. Red-team, repair, and gate
+### 8. Red-team, repair, and gate
 
 For substantial systems, follow [red-team-and-evaluation.md](references/red-team-and-evaluation.md). Prefer a fresh-context critic or QA specialist when available and valuable.
 
 Repair material defects and stop when another iteration has negligible expected value.
 
-### 8. Handoff
+### 9. Handoff
 
 Follow [execution-handoff.md](references/execution-handoff.md). Make actual skill/tool state explicit and ensure the future executor is instructed to use selected capabilities, not merely told they exist.
 
