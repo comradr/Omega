@@ -42,3 +42,13 @@ Re-evaluate assumptions when the runtime, model class, tool behavior, or skill p
 - **Applies when:** external or shared skill bundles are introduced.
 - **Do not assume:** a skill is safe because its instructions look harmless; scripts and tool access are part of the trust surface.
 - **Last verified:** 2026-10-02.
+
+
+### Skill bundle validation limits
+
+- **Evidence class:** official OpenAI Developers documentation.
+- **Verified:** 2026-10-02.
+- **Current documented constraints:** exactly one case-insensitive `SKILL.md`/ `skill.md` per uploaded bundle, maximum 50 MB compressed zip, maximum 500 files per skill version, and maximum 25 MB per uncompressed file.
+- **Manifest constraints:** `description` is required, non-empty, and at most 1,024 characters; the skill instruction body must be non-empty.
+- **Agent metadata:** `agents/openai.yaml` is optional. If included, `interface.display_name` and `interface.short_description` are required; `default_prompt` and policy settings are optional.
+- **Sources:** OpenAI Developers “Skills”, “Build skills”, and plugin submission validation documentation.
