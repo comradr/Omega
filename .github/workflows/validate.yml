@@ -2,7 +2,7 @@ name: Validate Omega
 
 on:
   push:
-    branches: [main, omega-1.0]
+    branches: [main]
   pull_request:
 
 permissions:
@@ -24,6 +24,8 @@ jobs:
         run: python scripts/test_validator.py
       - name: Scaffolder hostile-input regression
         run: python scripts/test_scaffolder.py
+      - name: Empirical harness regression
+        run: python scripts/test_eval_harness.py
       - name: Compile Python
         run: python -m compileall -q scripts
       - name: Package and revalidate archives
