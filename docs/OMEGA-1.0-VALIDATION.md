@@ -10,9 +10,9 @@ This report records what has actually been verified for the Omega 1.0 release ca
 
 The 0.9.0 `SKILL.md` baseline contains 9,207 characters, 139 lines, and 1,175 whitespace-delimited words.
 
-The compact 1.0 candidate core contains 7,186 characters, 92 lines, and 857 whitespace-delimited words.
+The RC2 compact core contains 7,186 characters and 857 whitespace-delimited words. RC3 reduces the same core to 6,699 characters and 793 whitespace-delimited words, with no workflow capability removed.
 
-The skill description used for discovery remains unchanged from the baseline. New 1.0 mechanisms live primarily in conditionally referenced supporting files, so added capability does not require expanding the discovery metadata.
+The discovery description is reduced from 789 characters in RC2 to 302 characters in RC3. This matters because OpenAI skill discovery exposes name/description metadata before full skill instructions are loaded. A CI guard now fails if the discovery description grows beyond 350 characters.
 
 These are structural size measurements, not claimed model token counts.
 
@@ -29,7 +29,9 @@ These are structural size measurements, not claimed model token counts.
 - behavior mining from repeated real corrections;
 - prompting evidence ledger;
 - empirical evaluation protocol;
-- trigger, behavior, and benchmark regression corpora.
+- trigger, behavior, and benchmark regression corpora;
+- dev/holdout trigger evaluation with explicit positive and negative boundary cases;
+- always-on discovery-description overhead guard.
 
 ## Local deterministic checks
 
