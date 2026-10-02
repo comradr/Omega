@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.0-rc3 — Standards-aligned validation
+
+- Aligned manifest validation with current OpenAI skill requirements: non-empty description up to 1,024 characters and non-empty instructions.
+- Enforced the documented upload limits: 500 files, 25 MB per uncompressed file, 50 MB compressed bundle, and exactly one case-insensitive SKILL.md manifest.
+- Made `agents/openai.yaml` optional in the generic validator; when present, required interface fields are validated while optional `default_prompt` and policy fields remain optional.
+- Kept Omega-specific metadata expectations in Omega's own static regression checks rather than treating them as universal skill requirements.
+- CI continues to package, extract, and revalidate the installable bundles.
+
 ## 1.0.0-rc2 — Lean core and hardened release checks
 
 - Reduced `SKILL.md` below the 0.9 baseline while retaining the 1.0 architecture through progressive disclosure.
