@@ -16,6 +16,7 @@ Optional only when the task specifically needs them:
 
 - **advanced-evaluation** — LLM-as-judge design, pairwise/rubric calibration, bias mitigation;
 - **harness-engineering** — runtime-enforced autonomous loops, locked evaluators, rollback, durable logs;
+- **self-improvement-loops** — maintenance-only patterns for turning repeated failures into evaluated self-edits; consider when improving Omega or another reusable agent system, not for ordinary prompt generation;
 - **tool-design** — designing or consolidating custom agent-tool contracts.
 
 ## Why not install broad prompt frameworks by default
