@@ -41,7 +41,7 @@ Quality first, but architectural overhead must earn its cost. Omega should not s
 
 ## Status
 
-Current stable release: `1.0.2`. It keeps Omega's compact 1.0 runtime behavior unchanged while making the generic task-skill validator standards-aligned and enforcing its regression suite in CI. Model-execution A/B superiority over 0.9 is not claimed without a repeatable independent runner.
+Current stable release on `main`: `1.0.2`. Branch `omega-1.0.3-final-audit` is the final-audit candidate. It keeps the compact runtime architecture, removes an unsupported default-prompt convention, and adds an executable blind A/B / trigger-evaluation harness. Model-execution superiority is not claimed until actual comparable runs are supplied.
 
 
 ## Install / use
@@ -55,7 +55,7 @@ GitHub is the source of truth, not an assumed direct-install endpoint.
 python scripts/package_skill.py .
 ```
 
-3. Use the generated `prompt-architect-omega.zip` or `prompt-architect-omega.skill` in a ChatGPT/Work surface that supports Skill upload/install.
+3. For OpenAI Skill upload/API use the generated `prompt-architect-omega.zip`, which contains one top-level skill folder as documented by OpenAI. The generated `.skill` file is an identical ZIP-format compatibility artifact; use that extension only on runtimes that explicitly accept it.
 4. In a separate prompt-engineering chat, describe the goal normally. Omega should decide the internal complexity path, relevant capabilities, whether skills/subagents/task-skill are justified, and return the smallest useful execution package.
 
 Do not paste the whole repository into every task chat. The installed skill should load detailed references only when needed.
