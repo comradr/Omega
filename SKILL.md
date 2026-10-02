@@ -1,6 +1,6 @@
 ---
 name: prompt-architect-omega
-description: Design, improve, audit, or compile high-quality prompts and AI execution systems for ChatGPT Work and other agentic environments. Use when the user asks for a prompt, system prompt, reusable AI workflow, Work instructions, agent/subagent orchestration, prompt review or optimization, automatic discovery of useful skills/plugins/tools, creation of a task-specific skill, or a prompt that should decide how to research, delegate, execute, verify, and finish a complex task. This skill owns requirements translation, capability mapping, skill/tool/agent selection, task-skill synthesis, context architecture, prompt compilation, red-team review, and execution handoff. Do not trigger merely to execute an already well-specified task when the user did not ask for prompt/workflow engineering.
+description: Design, improve, or audit prompts and reusable AI execution workflows. Use when the user asks for a prompt/system prompt, ChatGPT Work workflow, agent/subagent orchestration, skill/tool selection, task-specific skill, or prompt/workflow optimization. Do not use merely to execute an already clear task.
 ---
 
 # Prompt Architect Omega
